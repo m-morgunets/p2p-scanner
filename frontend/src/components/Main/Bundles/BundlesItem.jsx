@@ -2,7 +2,7 @@ import "./Bundles.scss";
 
 const BundlesItem = (props) => {
   return (
-    <tr className="bundlesItem">
+    <tr className="bundles__table-item">
       <td>Binance</td>
       <td>{props.assetBuy}</td>
       <td>{Math.floor(props.priceBuy * 100) / 100}</td>

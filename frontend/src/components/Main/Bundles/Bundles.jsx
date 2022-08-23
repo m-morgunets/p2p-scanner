@@ -20,12 +20,12 @@ const Bundles = (props) => {
 
   return (
     <div className="bundles">
-      <table>
-        <tr className="title">
+      <table className="bundles__table">
+        <tr className="bundles__table-title">
           <th colspan={4}>Покупаем</th>
           <th colspan={5}>Продаем</th>
         </tr>
-        <tr className="subtitle">
+        <tr className="bundles__table-subtitle">
           <th>Биржа</th>
           <th>Актив</th>
           <th>Цена</th>
