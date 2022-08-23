@@ -1,0 +1,70 @@
+html {
+  box-sizing: border-box;
+  overflow-y: hidden;
+  &.active {
+    overflow-y: auto;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  color: #fff;
+  background-color: #171717;
+  font-family: "Gilroy";
+  font-weight: 400;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  outline: none;
+}
+
+ul,
+li,
+button {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+.container {
+  max-width: 1240px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.default-title {
+  font-weight: 100;
+  font-size: 40px;
+  text-transform: uppercase;
+}
+
+@media (max-width: 900px) {
+  .default-title {
+    font-size: 36px;
+    line-height: 46px !important;
+  }
+}
+
+@media (max-width: 500px) {
+  .default-title {
+    text-align: left !important;
+    font-size: 30px;
+    line-height: 38px !important;
+  }
+}

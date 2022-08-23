@@ -1,0 +1,14 @@
+/* autoprefixer grid: autoplace */
+
+@import "vars";
+@import "libs";
+@import "fonts";
+@import "global";
+
+.App{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+@import "media";
