@@ -5,4 +5,27 @@
 @import "fonts";
 @import "global";
 
+
+header{
+  width: 100%;
+  position: fixed;
+  background-color: #171717;
+  z-index: 10;
+  height: 80px;
+}
+.logout{
+  font-size: 16px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background-color: #0d0d0d;
+  color: rgba(255, 255, 255, 0.5);
+  width: 120px;
+  height: 40px;
+  cursor: pointer;
+  position: absolute; 
+  right: 30px;
+  top: 50%;
+  transform: translateY(-50%)
+}
+
 @import "media";

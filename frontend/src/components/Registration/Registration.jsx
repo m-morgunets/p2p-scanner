@@ -1,12 +1,20 @@
 import { Link } from "react-router-dom";
-import "./Аuthorization.scss";
+import "./Registration.scss";
 
-const Аuthorization = (props) => {
+const Registration = (props) => {
 
   return (
-    <form onSubmit={props.submitForm} className="authorization">
-      <Link to="/signup" className="authorization__subtitle">Зарегистрироваться</Link>
+    <form onSubmit={props.submitForm} className="authorization registration">
+      <Link to="/login" className="authorization__subtitle">Авторизоваться</Link>
       <div className="authorization__title">p2p_scanner</div>
+      <input
+        name="name"
+        onChange={props.onChangeInput}
+        value={props.formData.name}
+        placeholder="your name"
+        type="text"
+        className="authorization__input"
+      />
       <input
         name="email"
         onChange={props.onChangeInput}
@@ -23,13 +31,13 @@ const Аuthorization = (props) => {
         type="password"
         className="authorization__input"
       />
-      {props.redirect && <div className="authorization__err-msg">{props.redirect}</div>}
+      {props.successMsg && <div className="registration__success-msg">{props.successMsg}</div>}
       {props.errMsg && <div className="authorization__err-msg">{props.errMsg}</div>}
       <button disabled={props.wait} type="submit" className="authorization__btn">
-        {"start--->"}
+        {"register"}
       </button>
     </form>
   );
 };
 
-export default Аuthorization;
+export default Registration;

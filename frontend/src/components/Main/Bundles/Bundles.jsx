@@ -2,7 +2,6 @@ import "./Bundles.scss";
 import BundlesItem from "./BundlesItem";
 
 const Bundles = (props) => {
-
   let bundlesItems = null;
   if (props.bundlesData != undefined) {
     bundlesItems = props.bundlesData.map((p) => (

@@ -6,8 +6,6 @@ import Bundles from "./Bundles/Bundles";
 
 import "./Main.scss";
 
-
-
 const Main = (props) => {
   const [checkboxState, setCheckboxState] = useState({
     exchanges: [],
@@ -18,18 +16,18 @@ const Main = (props) => {
   const [originalbundlesData, setOriginalBundlesData] = useState(undefined);
 
   const payTypesData = {
-     "Tinkoff": "Тинькофф",
-     "RosBank": "Росбанк",
-     "RaiffeisenBankRussia": "Райффайзенбанк",
-     "QIWI": "QIWI",
-     "PostBankRussia": "Почта Банк",
-     "ABank": "A-Bank",
-     "RUBfiatbalance": "BinancePay (RUB)",
-     "YandexMoneyNew": "Юmoney",
-     "MTSBank": "МТС-Банк",
-     "HomeCreditBank": "Хоум Кредит Банк",
-     "Payeer": "Payeer",
-     "Advcash": "AdvCash",
+    Tinkoff: "Тинькофф",
+    RosBank: "Росбанк",
+    RaiffeisenBankRussia: "Райффайзенбанк",
+    QIWI: "QIWI",
+    PostBankRussia: "Почта Банк",
+    ABank: "A-Bank",
+    RUBfiatbalance: "BinancePay (RUB)",
+    YandexMoneyNew: "Юmoney",
+    MTSBank: "МТС-Банк",
+    HomeCreditBank: "Хоум Кредит Банк",
+    Payeer: "Payeer",
+    Advcash: "AdvCash",
   };
 
   function filterData(originalData, options) {
@@ -37,7 +35,7 @@ const Main = (props) => {
       .filter((e) => filterDataInFunc(e.asset_buy, options.assets))
       .filter((e) => filterDataInFunc(e.asset_sell, options.assets))
       .filter((e) => filterDataInFunc(e.payTypes_buy, options.payTypes))
-      .filter((e) => filterDataInFunc(e.payTypes_sell, options.payTypes))
+      .filter((e) => filterDataInFunc(e.payTypes_sell, options.payTypes));
 
     setNewBundlesData(newData);
 
@@ -90,8 +88,8 @@ const Main = (props) => {
 
     filterData(originalbundlesData, checkboxState);
   }
-  // const urlGet = "../../index-prod.php";
-  const urlGet = "http://p2p-backend:8080/";
+  // const urlGet = "../../getBundles-prod.php";
+  const urlGet = "http://p2p-backend:8080/getBundles.php";
 
   const getData = async () => {
     try {
@@ -105,7 +103,7 @@ const Main = (props) => {
           e.payTypes_buyText = payTypesData[e.payTypes_buy];
           e.payTypes_sellText = payTypesData[e.payTypes_sell];
           return e;
-        })
+        });
         setOriginalBundlesData(responseResult);
 
         filterData(responseResult, checkboxState);
@@ -126,15 +124,19 @@ const Main = (props) => {
 
   return (
     <div className="Main">
+      <header>
+        <button className="logout" onClick={props.logout}>
+          LogOut
+        </button>
+      </header>
       <Settings
         onChangeExchanges={onChangeExchanges}
         onChangeAssets={onChangeAssets}
         onChangePayTypes={onChangePayTypes}
       />
-      <Bundles bundlesData={newbundlesData} />
-      
+      <Bundles logout={props.logout} bundlesData={newbundlesData} />
     </div>
   );
-}
+};
 
 export default Main;
