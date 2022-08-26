@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import Registration from "./components/Registration/Registration";
 
 export const Axios = axios.create({
-  baseURL: "http://p2p-backend:8080/php-auth-api/",
+  baseURL: "../../php/php-auth-api/",
 });
 
 function App() {
@@ -160,7 +160,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          {theUser && <Route path="/" element={<Main logout={logout} />} />}
+          {theUser && <Route path="/" element={<Main user={theUser} logout={logout} />} />}
           {!theUser && (
             <>
               <Route

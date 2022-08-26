@@ -31,13 +31,15 @@ const Main = (props) => {
   };
 
   function filterData(originalData, options) {
-    let newData = originalData
-      .filter((e) => filterDataInFunc(e.asset_buy, options.assets))
-      .filter((e) => filterDataInFunc(e.asset_sell, options.assets))
-      .filter((e) => filterDataInFunc(e.payTypes_buy, options.payTypes))
-      .filter((e) => filterDataInFunc(e.payTypes_sell, options.payTypes));
+    if (originalData.length !== 0 && originalData !== undefined) {
+      let newData = originalData
+        .filter((e) => filterDataInFunc(e.asset_buy, options.assets))
+        .filter((e) => filterDataInFunc(e.asset_sell, options.assets))
+        .filter((e) => filterDataInFunc(e.payTypes_buy, options.payTypes))
+        .filter((e) => filterDataInFunc(e.payTypes_sell, options.payTypes));
 
-    setNewBundlesData(newData);
+      setNewBundlesData(newData);
+    }
 
     function filterDataInFunc(dataItem, optionItem) {
       if (optionItem.length !== 0) {
@@ -88,8 +90,10 @@ const Main = (props) => {
 
     filterData(originalbundlesData, checkboxState);
   }
-  // const urlGet = "../../getBundles-prod.php";
-  const urlGet = "http://p2p-backend:8080/getBundles.php";
+
+  // const urlGet = "localhost/php/getBundles-prod.php";
+  const urlGet = "../../php/getBundles-prod.php";
+  // const urlGet = "http://p2p-backend:8080/getBundles.php";
 
   const getData = async () => {
     try {
@@ -117,17 +121,20 @@ const Main = (props) => {
 
   useEffect(() => {
     getData();
-    // setInterval(() => {
-    //   getData();
-    // }, 10000);
+    setInterval(() => {
+      getData();
+    }, 10000);
   }, []);
 
   return (
     <div className="Main">
-      <header>
-        <button className="logout" onClick={props.logout}>
-          LogOut
-        </button>
+      <header className="header">
+        <div className="header-box">
+          <div className="header__name">{props.user.name}</div>
+          <button className="logout" onClick={props.logout}>
+            LogOut
+          </button>
+        </div>
       </header>
       <Settings
         onChangeExchanges={onChangeExchanges}
