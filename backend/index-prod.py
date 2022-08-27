@@ -5,11 +5,18 @@ import time
 from datetime import datetime
 from pprint import pprint
 
+from threading import Thread
 from mysql.connector import connect, Error
+
+hostSql = "miha12x4.beget.tech"
+userSql = "miha12x4_p2p"
+passwordSql = "Mm_0214123771"
+databaseSql = "miha12x4_p2p"
 
 timeJson = []
 optionsBuy = []
 exceptionIndicator = True
+threadingIndicator = 0
 
 payTypes = ["TinkoffNew", "RosBank", "RaiffeisenBankRussia", "QIWI", "PostBankRussia", "ABank",
   "RUBfiatbalance", "YandexMoneyNew", "MTSBank", "HomeCreditBank", "Payeer", "Advcash"]
@@ -162,21 +169,21 @@ for key1 in asset:
   )
 
 
-def bundles():
+def bundles(key):
   bundlesData = []
 
-  for key in dataSort:
-    for keyAsset in dataSort[key]:
-      for keyPayBuy in dataSort[key][keyAsset]:
+  for keyAsset in dataSort[key]:
+    for keyPayBuy in dataSort[key][keyAsset]:
 
-        for keyPaySell in dataSort[key][keyAsset]:
-          priceBuy = float(dataSort[key][keyAsset][keyPayBuy])
-          priceSell = float(dataSort[key][keyAsset][keyPaySell])
-          minLimit  = key
-          maxLimit  = key + 9999
-          if(priceBuy != 0 and priceSell != 0):
-            liquidity = ((100/priceBuy) * priceSell)-100
-            datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+      for keyPaySell in dataSort[key][keyAsset]:
+        priceBuy = float(dataSort[key][keyAsset][keyPayBuy])
+        priceSell = float(dataSort[key][keyAsset][keyPaySell])
+        minLimit  = key
+        maxLimit  = key + 9999
+        if(priceBuy != 0 and priceSell != 0):
+          liquidity = ((100/priceBuy) * priceSell)-100
+          datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+          if (liquidity > 0):
             bundlesData.append(
               (
                 str(datetimeDb),
@@ -193,12 +200,12 @@ def bundles():
             )
 
   try:
-    with connect(host="miha12x4.beget.tech", user="miha12x4_p2p", password="Mm_0214123771", database="miha12x4_p2p") as connection:
+    with connect(host=hostSql, user=userSql, password=passwordSql, database=databaseSql) as connection:
       datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-      delete_bundles_query = "DELETE FROM bundles"
-      alter_bundles_query = "ALTER TABLE bundles AUTO_INCREMENT = 1"
+      delete_bundles_query = "DELETE FROM bundles_"+str(key)
+      alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
       insert_bundles_query = """
-        INSERT INTO bundles (datetime, asset_buy, payTypes_buy, price_buy,
+        INSERT INTO bundles_""" + str(key) + """ (datetime, asset_buy, payTypes_buy, price_buy,
           asset_sell, payTypes_sell, price_sell, liquidity, min_limit, max_limit)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
       """
@@ -208,6 +215,8 @@ def bundles():
         cursor.executemany(insert_bundles_query, bundlesData)
         connection.commit()
       print("INSERT performed")
+      global threadingIndicator
+      threadingIndicator += 1
   except Error as e:
     print(e)
 
@@ -260,6 +269,7 @@ def req():
         payTypesId += 1
         assetId += 1
 
+
 while True:
   startTime = datetime.now()
 
@@ -268,7 +278,15 @@ while True:
   print("Время затраченное на API запросы: " + str(endTime - startTime))
   
   startTime = datetime.now()
-  bundles()
-  endTime = datetime.now()
-  print("Время затраченное на MySQL запросы : " + str(endTime - startTime))
+  for key in dataSort:
+    Thread(target=bundles, args=(key, )).start()
+
+  while True:
+    if (threadingIndicator == len(dataSort)):
+      endTime = datetime.now()
+      print("Время затраченное на MySQL запросы : " + str(endTime - startTime))
+      threadingIndicator = 0
+      break
+    time.sleep(0.5)
+
   time.sleep(5)
