@@ -5,6 +5,7 @@ import Settings from "./Settings/Settings";
 import Bundles from "./Bundles/Bundles";
 
 import "./Main.scss";
+import Header from "../Header/Header";
 
 const Main = (props) => {
   const [checkboxState, setCheckboxState] = useState({
@@ -12,11 +13,12 @@ const Main = (props) => {
     assets: [],
     payTypes: [],
   });
+  const [settingsSum, setSettingsSum] = useState(undefined);
   const [newbundlesData, setNewBundlesData] = useState(undefined);
   const [originalbundlesData, setOriginalBundlesData] = useState(undefined);
 
   const payTypesData = {
-    Tinkoff: "Тинькофф",
+    TinkoffNew: "Тинькофф",
     RosBank: "Росбанк",
     RaiffeisenBankRussia: "Райффайзенбанк",
     QIWI: "QIWI",
@@ -31,14 +33,16 @@ const Main = (props) => {
   };
 
   function filterData(originalData, options) {
-    if (originalData.length !== 0 && originalData !== undefined) {
-      let newData = originalData
-        .filter((e) => filterDataInFunc(e.asset_buy, options.assets))
-        .filter((e) => filterDataInFunc(e.asset_sell, options.assets))
-        .filter((e) => filterDataInFunc(e.payTypes_buy, options.payTypes))
-        .filter((e) => filterDataInFunc(e.payTypes_sell, options.payTypes));
+    if (originalData !== undefined) {
+      if (originalData.length !== 0) {
+        let newData = originalData
+          .filter((e) => filterDataInFunc(e.asset_buy, options.assets))
+          .filter((e) => filterDataInFunc(e.asset_sell, options.assets))
+          .filter((e) => filterDataInFunc(e.payTypes_buy, options.payTypes))
+          .filter((e) => filterDataInFunc(e.payTypes_sell, options.payTypes));
 
-      setNewBundlesData(newData);
+        setNewBundlesData(newData);
+      }
     }
 
     function filterDataInFunc(dataItem, optionItem) {
@@ -64,12 +68,46 @@ const Main = (props) => {
     return options;
   }
 
+  function onChangeSum(e) {
+    if (!isNaN(e.target.value)) {
+      if (e.target.value <= 300000) {
+        setSettingsSum(e.target.value.replace(/ /g, "").replace(/^0+/, ""));
+      }
+    }
+  }
+
+  function onKeyDownSum(e) {
+    if (e.keyCode === 13) {
+      sendingSum();
+    }
+  }
+
+  function sendingSum() {
+    let sum;
+    if (settingsSum < 5000) {
+      sum = "5000";
+    } else if (settingsSum >= 5000 && settingsSum < 10000) {
+      sum = "5000";
+    } else if (settingsSum == 300000) {
+      sum = "290000";
+    } else {
+      sum = settingsSum.slice(0, -4) + "0000";
+    }
+
+    console.log(sum);
+    if (settingsSum === undefined || settingsSum === "") {
+      getData("5000");
+    } else {
+      getData(sum);
+    }
+  }
+
   function onChangeExchanges(e) {
     let checkboxData = checkboxState;
     const options = checkboxData.exchanges;
     checkboxData.exchanges = onChange(e, options);
     setCheckboxState(checkboxData);
-    console.log(checkboxData.exchanges);
+    // console.log(checkboxData.exchanges);
     // getData();
   }
   function onChangeAssets(e) {
@@ -77,7 +115,7 @@ const Main = (props) => {
     const options = checkboxData.assets;
     checkboxData.assets = onChange(e, options);
     setCheckboxState(checkboxData);
-    console.log(checkboxData.assets);
+    // console.log(checkboxData.assets);
 
     filterData(originalbundlesData, checkboxState);
   }
@@ -86,7 +124,7 @@ const Main = (props) => {
     const options = checkboxData.payTypes;
     checkboxData.payTypes = onChange(e, options);
     setCheckboxState(checkboxData);
-    console.log(checkboxData.payTypes);
+    // console.log(checkboxData.payTypes);
 
     filterData(originalbundlesData, checkboxState);
   }
@@ -95,9 +133,14 @@ const Main = (props) => {
   const urlGet = "../../php/getBundles-prod.php";
   // const urlGet = "http://p2p-backend:8080/getBundles.php";
 
-  const getData = async () => {
+  const getData = async (sum) => {
     try {
-      const response = await axios.get(urlGet);
+      if (sum === undefined || sum === "") {
+        sum = "5000";
+      }
+      const optionsData = new FormData();
+      optionsData.set("sum", sum);
+      const response = await axios.post(urlGet, optionsData);
       if (response.data.length === 0) {
         setTimeout(() => {
           getData();
@@ -127,19 +170,16 @@ const Main = (props) => {
   }, []);
 
   return (
-    <div className="Main">
-      <header className="header">
-        <div className="header-box">
-          <div className="header__name">{props.user.name}</div>
-          <button className="logout" onClick={props.logout}>
-            LogOut
-          </button>
-        </div>
-      </header>
+    <div className="main">
+      <Header user={props.user} logout={props.logout} />
       <Settings
         onChangeExchanges={onChangeExchanges}
         onChangeAssets={onChangeAssets}
         onChangePayTypes={onChangePayTypes}
+        onChangeSum={onChangeSum}
+        settingsSumVal={settingsSum}
+        onKeyDownSum={onKeyDownSum}
+        blurFunc={sendingSum}
       />
       <Bundles logout={props.logout} bundlesData={newbundlesData} />
     </div>

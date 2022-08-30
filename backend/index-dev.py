@@ -11,19 +11,46 @@ from mysql.connector import connect, Error
 
 
 
-hostSql = "miha12x4.beget.tech"
-userSql = "miha12x4_p2p"
-passwordSql = "Mm_0214123771"
-databaseSql = "miha12x4_p2p"
-# hostSql = "127.0.0.1"
-# userSql = "root"
-# passwordSql = "root"
-# databaseSql = "p2p"
+# hostSql = "miha12x4.beget.tech"
+# userSql = "miha12x4_p2p"
+# passwordSql = "Mm_0214123771"
+# databaseSql = "miha12x4_p2p"
+hostSql = "127.0.0.1"
+userSql = "root"
+passwordSql = "root"
+defaultDatabaseSql = "defaultbundles"
+conversionDatabaseSql = "conversionbundles"
 
 timeJson = []
 optionsBuy = []
+conversionData = {}
 exceptionIndicator = True
 threadingIndicator = 0
+
+conversionReqUrls = []
+currencies = ["BTCUSDT", "BUSDUSDT", "BNBUSDT", "ETHUSDT", "USDTRUB",
+  "SHIBUSDT", "BTCBUSD", "BNBBTC", "ETHBTC", "BTCRUB", "BNBBUSD",
+  "ETHBUSD", "BUSDRUB", "SHIBBUSD", "BNBETH", "BNBRUB", "ETHRUB"]
+  
+currenciesnName = {
+  "BTCUSDT": ["BTC", "USDT"],
+  "BUSDUSDT": ["BUSD", "USDT"],
+  "BNBUSDT": ["BNB", "USDT"],
+  "ETHUSDT": ["ETH", "USDT"],
+  "USDTRUB": ["USDT", "RUB"],
+  "SHIBUSDT": ["SHIB", "USDT"],
+  "BTCBUSD": ["BTC", "BUSD"],
+  "BNBBTC": ["BNB", "BTC"],
+  "ETHBTC": ["ETH", "BTC"],
+  "BTCRUB": ["BTC", "RUB"],
+  "BNBBUSD": ["BNB", "BUSD"],
+  "ETHBUSD": ["ETH", "BUSD"],
+  "BUSDRUB": ["BUSD", "RUB"],
+  "SHIBBUSD": ["SHIB", "BUSD"],
+  "BNBETH": ["BNB", "ETH"],
+  "BNBRUB": ["BNB", "RUB"],
+  "ETHRUB": ["ETH", "RUB"]
+}
 
 payTypes = ["TinkoffNew", "RosBank", "RaiffeisenBankRussia", "QIWI", "PostBankRussia", "ABank",
   "RUBfiatbalance", "YandexMoneyNew", "MTSBank", "HomeCreditBank", "Payeer", "Advcash"]
@@ -175,12 +202,82 @@ for key1 in asset:
     }
   )
 
+for url in currencies:
+  conversionReqUrls.append("https://api.binance.com/api/v3/ticker/price?symbol=" + url)
 
-def bundles(key):
+
+def conversionBundles(key):
+  bundlesData = []
+  
+  for keyAssetBuy in dataSort[key]:
+
+    for keyAssetSell in dataSort[key]:
+
+      if (keyAssetBuy == keyAssetSell):
+        break
+
+      for keyPayBuy in dataSort[key][keyAssetBuy]:
+
+        for keyPaySell in dataSort[key][keyAssetBuy]:
+          if ((keyAssetBuy + keyAssetSell) in conversionData):
+            priceBuy = float(dataSort[key][keyAssetBuy][keyPayBuy])
+            priceSell = float(dataSort[key][keyAssetSell][keyPaySell])
+
+            conversionPrice = conversionData[keyAssetBuy + keyAssetSell]
+
+            minLimit  = key
+            maxLimit  = key + 9999
+            if (minLimit == 5000):
+              maxLimit = 9999
+            if(priceBuy != 0 and priceSell != 0):
+              liquidity = ((100/priceBuy) * conversionPrice * priceSell)-100
+              datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+              if (liquidity > 0.1):
+                bundlesData.append(
+                  (
+                    str(datetimeDb),
+                    keyAssetBuy,
+                    keyPayBuy,
+                    str(priceBuy),
+                    keyAssetSell,
+                    keyPaySell,
+                    str(priceSell),
+                    str(liquidity),
+                    minLimit,
+                    maxLimit,
+                  )
+                )
+
+  try:
+    with connect(host=hostSql, user=userSql, password=passwordSql, database=conversionDatabaseSql) as connection:
+      datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+      delete_bundles_query = "DELETE FROM bundles_"+str(key)
+      alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
+      insert_bundles_query = """
+        INSERT INTO bundles_""" + str(key) + """ (datetime, asset_buy, payTypes_buy, price_buy,
+          asset_sell, payTypes_sell, price_sell, liquidity, min_limit, max_limit)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+      """
+      with connection.cursor() as cursor:
+        cursor.execute(delete_bundles_query)
+        cursor.execute(alter_bundles_query)
+        cursor.executemany(insert_bundles_query, bundlesData)
+        connection.commit()
+      print("INSERT performed")
+  except Error as e:
+    print(e)
+
+  global threadingIndicator
+  threadingIndicator += 1
+
+  with open("conversionBundles.json", "w") as outfile:
+    json.dump(bundlesData, outfile)
+  
+
+def defaultBundles(key):
   bundlesData = []
 
   
-  # for key in dataSort:
   for keyAsset in dataSort[key]:
     for keyPayBuy in dataSort[key][keyAsset]:
 
@@ -189,10 +286,12 @@ def bundles(key):
         priceSell = float(dataSort[key][keyAsset][keyPaySell])
         minLimit  = key
         maxLimit  = key + 9999
+        if (minLimit == 5000):
+          maxLimit = 9999
         if(priceBuy != 0 and priceSell != 0):
           liquidity = ((100/priceBuy) * priceSell)-100
           datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-          if (liquidity > 0):
+          if (liquidity > 0.1):
             bundlesData.append(
               (
                 str(datetimeDb),
@@ -227,7 +326,7 @@ def bundles(key):
   #   print(e)
 
   try:
-    with connect(host=hostSql, user=userSql, password=passwordSql, database=databaseSql) as connection:
+    with connect(host=hostSql, user=userSql, password=passwordSql, database=defaultDatabaseSql) as connection:
       datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
       delete_bundles_query = "DELETE FROM bundles_"+str(key)
       alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
@@ -242,10 +341,11 @@ def bundles(key):
         cursor.executemany(insert_bundles_query, bundlesData)
         connection.commit()
       print("INSERT performed")
-      global threadingIndicator
-      threadingIndicator += 1
   except Error as e:
     print(e)
+
+  global threadingIndicator
+  threadingIndicator += 1
 
 # def repeatedReq(asset, payTypes, tradeType):
   # options["asset"] = asset;
@@ -330,32 +430,65 @@ def req():
   # input()
 
 
-while True:
-  startTime = datetime.now()
+def conversionReq():
+  global exceptionIndicator
+  exceptionIndicator = True
+  data = (grequests.get(url) for url in conversionReqUrls)
+  result = grequests.map(data, exception_handler=exception_handler)
 
+  if (exceptionIndicator):
+    for key in result:
+      # try:
+      dataJson = json.loads(key.text)
+      currenciesBuy = currenciesnName[dataJson["symbol"]][0]
+      currenciesSell = currenciesnName[dataJson["symbol"]][1]
+      conversionData[currenciesBuy + currenciesSell] = float(dataJson["price"])
+      conversionData[currenciesSell + currenciesBuy] = (1 / float(dataJson["price"]))
+      # except:
+      #   print(key.status_code)
+      #   time.sleep(60)
+      #   conversionReq()
+
+
+while True:
+  # Запросы для расчёта обычных связок
+  startTime = datetime.now()
   req()
   endTime = datetime.now()
   print("Время затраченное на API запросы: " + str(endTime - startTime))
   
+  # Запросы курса (по маркету) для конвертационных связок
   startTime = datetime.now()
-  
-  for key in dataSort:
-    Thread(target=bundles, args=(key, )).start()
+  conversionReq()
+  endTime = datetime.now()
+  print("Время затраченное на API запросы: " + str(endTime - startTime))
+  pprint(conversionData)
+  input()
 
-  # bundles(5000)
+  # Расчёт обычых связок и оиправка их в БД
+  startTime = datetime.now()
+  for key in dataSort:
+    Thread(target=defaultBundles, args=(key, )).start()
+
   while True:
     if (threadingIndicator == len(dataSort)):
       endTime = datetime.now()
-      print("Время затраченное на MySQL запросы : " + str(endTime - startTime))
+      print("Время затраченное на MySQL запросы (default): " + str(endTime - startTime))
       threadingIndicator = 0
       break
     time.sleep(0.5)
 
-  time.sleep(5)
-  # reqSell()
+  # Расчёт конвертационных связок и оиправка их в БД
+  startTime = datetime.now()
+  for key in dataSort:
+    Thread(target=conversionBundles, args=(key, )).start()
 
-  # timeJson.append(str(endTime - startTime))
-  # with open("time.json", "w") as outfile:
-  #   json.dump(timeJson, outfile)
+  while True:
+    if (threadingIndicator == len(dataSort)):
+      endTime = datetime.now()
+      print("Время затраченное на MySQL запросы (conversion): " + str(endTime - startTime))
+      threadingIndicator = 0
+      break
+    time.sleep(0.5)
 
 

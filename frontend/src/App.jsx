@@ -6,10 +6,13 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Registration from "./components/Registration/Registration";
+import NoAccess from "./components/NoAccess/NoAccess";
+import Plug from "./components/Plug/Plug";
 
-export const Axios = axios.create({
-  baseURL: "../../php/php-auth-api/",
-});
+export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
+// export const Axios = axios.create({
+//   baseURL: "http://p2p-backend:8080/php-auth-api/",
+// });
 
 function App() {
   const [theUser, setUser] = useState(null);
@@ -22,6 +25,8 @@ function App() {
 
   const [errMsgLogin, setErrMsgLogin] = useState(false);
   const [errMsgSignup, setErrMsgSignup] = useState(false);
+
+  const [indicatorLogin, setIndicatorLogin] = useState(false);
 
   const [formDataLogin, setFormDataLogin] = useState({
     email: "",
@@ -41,9 +46,11 @@ function App() {
       const { data } = await Axios.get("getUser.php");
       if (data.success && data.user) {
         setUser(data.user);
+        setIndicatorLogin(true);
         return;
       }
       setUser(null);
+      setIndicatorLogin(true);
     }
   };
 
@@ -93,8 +100,8 @@ function App() {
   const onChangeInputSignup = (e) => {
     setFormDataSignup({
       ...formDataSignup,
-      [e.target.name]:e.target.value
-  })
+      [e.target.name]: e.target.value,
+    });
   };
 
   const submitFormLogin = async (e) => {
@@ -156,11 +163,23 @@ function App() {
     asyncCall();
   }, []);
 
+  console.log(theUser);
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          {theUser && <Route path="/" element={<Main user={theUser} logout={logout} />} />}
+          {theUser && Number(theUser.access) && indicatorLogin && (
+            <Route path="/" element={<Main user={theUser} logout={logout} />} />
+          )}
+          {theUser && !Number(theUser.access) && indicatorLogin && (
+            <Route
+              path="/"
+              element={<NoAccess user={theUser} logout={logout} />}
+            />
+          )}
+          {!theUser && !indicatorLogin && (
+            <Route path="/" element={<Plug />} />
+          )}
           {!theUser && (
             <>
               <Route
@@ -192,10 +211,16 @@ function App() {
               />
             </>
           )}
-          <Route
+          {indicatorLogin && (
+            <Route
+              path="*"
+              element={<Navigate to={theUser ? "/" : "/login"} />}
+            />
+          )}
+          {/* <Route
             path="*"
-            element={<Navigate to={theUser ? "/" : "/login"} />}
-          />
+            element={<Navigate to={indicatorLogin ? "/" : "/login"} />}
+          /> */}
         </Routes>
       </BrowserRouter>
     </div>

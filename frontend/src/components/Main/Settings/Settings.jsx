@@ -13,7 +13,7 @@ const Settings = (props) => {
     { title: "SHIB", value: "SHIB" },
   ];
   const payTypesData = [
-    { title: "Тинькофф", value: "Tinkoff" },
+    { title: "Тинькофф", value: "TinkoffNew" },
     { title: "Росбанк", value: "RosBank" },
     { title: "Райффайзенбанк", value: "RaiffeisenBankRussia" },
     { title: "QIWI", value: "QIWI" },
@@ -52,9 +52,9 @@ const Settings = (props) => {
         />
       </div>
       <div className="settings-box">
-        <div className="settings__subtitle">Сумма:</div>
+        <div className="settings__subtitle">Сумма (от 5к до 300к):</div>
         <div className="settings__input">
-          <input type="text" /> <p>RUB</p>
+          <input value={props.settingsSumVal} onKeyDown={props.onKeyDownSum} onBlur={props.blurFunc} onChange={props.onChangeSum} type="text" /> <p>RUB</p>
         </div>
       </div>
     </div>
