@@ -1,6 +1,5 @@
 import "./scss/style.scss";
 import Аuthorization from "./components/Аuthorization/Аuthorization";
-import Main from "./components/Main/Main";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import axios from "axios";
@@ -8,6 +7,7 @@ import { useEffect, useState } from "react";
 import Registration from "./components/Registration/Registration";
 import NoAccess from "./components/NoAccess/NoAccess";
 import Plug from "./components/Plug/Plug";
+import Main from "./components/Main/Main";
 
 export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
 // export const Axios = axios.create({
@@ -50,8 +50,8 @@ function App() {
         return;
       }
       setUser(null);
-      setIndicatorLogin(true);
     }
+    setIndicatorLogin(true);
   };
 
   const loginUser = async ({ email, password }) => {
@@ -163,23 +163,29 @@ function App() {
     asyncCall();
   }, []);
 
-  console.log(theUser);
+  console.log(indicatorLogin);
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
           {theUser && Number(theUser.access) && indicatorLogin && (
-            <Route path="/" element={<Main user={theUser} logout={logout} />} />
+            <Route
+              path="/*"
+              element={<Main user={theUser} logout={logout} />}
+            />
           )}
+
           {theUser && !Number(theUser.access) && indicatorLogin && (
             <Route
               path="/"
               element={<NoAccess user={theUser} logout={logout} />}
             />
           )}
+
           {!theUser && !indicatorLogin && (
-            <Route path="/" element={<Plug />} />
+            <Route path="/*" element={<Plug />} />
           )}
+
           {!theUser && (
             <>
               <Route
@@ -211,16 +217,13 @@ function App() {
               />
             </>
           )}
+
           {indicatorLogin && (
             <Route
               path="*"
               element={<Navigate to={theUser ? "/" : "/login"} />}
             />
           )}
-          {/* <Route
-            path="*"
-            element={<Navigate to={indicatorLogin ? "/" : "/login"} />}
-          /> */}
         </Routes>
       </BrowserRouter>
     </div>

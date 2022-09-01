@@ -1,4 +1,5 @@
 import "./Settings.scss";
+import { NavLink } from "react-router-dom";
 import SettingsList from "./SettingsList";
 
 const Settings = (props) => {
@@ -30,6 +31,24 @@ const Settings = (props) => {
   return (
     <div className="settings">
       <div className="settings__title">Режим</div>
+      <ul className="settings__nav">
+        <li className="settings__nav-item">
+          <NavLink
+            className={({ isActive }) => (isActive ? "active" : "")}
+            to="/default"
+          >
+            Стандартный
+          </NavLink>
+        </li>
+        <li className="settings__nav-item">
+          <NavLink
+            className={({ isActive }) => (isActive ? "active" : "")}
+            to="/conversion"
+          >
+            Конвертационный
+          </NavLink>
+        </li>
+      </ul>
       <div className="settings-box">
         <div className="settings__subtitle">Биржи:</div>
         <SettingsList
@@ -39,10 +58,7 @@ const Settings = (props) => {
       </div>
       <div className="settings-box">
         <div className="settings__subtitle">Активы:</div>
-        <SettingsList
-          onChangeFunc={props.onChangeAssets}
-          data={assetData}
-        />
+        <SettingsList onChangeFunc={props.onChangeAssets} data={assetData} />
       </div>
       <div className="settings-box">
         <div className="settings__subtitle">Платежки:</div>
@@ -54,7 +70,14 @@ const Settings = (props) => {
       <div className="settings-box">
         <div className="settings__subtitle">Сумма (от 5к до 300к):</div>
         <div className="settings__input">
-          <input value={props.settingsSumVal} onKeyDown={props.onKeyDownSum} onBlur={props.blurFunc} onChange={props.onChangeSum} type="text" /> <p>RUB</p>
+          <input
+            value={props.settingsSumVal}
+            onKeyDown={props.onKeyDownSum}
+            onBlur={props.blurFunc}
+            onChange={props.onChangeSum}
+            type="text"
+          />{" "}
+          <p>RUB</p>
         </div>
       </div>
     </div>

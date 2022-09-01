@@ -3,7 +3,7 @@ import "./Plug.scss";
 const Plug = (props) => {
   return (
     <div className="plug">
-      <svg class="spinner" viewBox="0 0 50 50">
+      <svg className="spinner" viewBox="0 0 50 50">
         <circle
           class="path"
           cx="25"

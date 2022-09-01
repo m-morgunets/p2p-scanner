@@ -4,6 +4,7 @@ import json
 import time
 from datetime import datetime
 from pprint import pprint
+import copy
 
 from threading import Thread
 
@@ -83,109 +84,110 @@ options = {
 
 dataBuy = {
   "USDT": {
-    "TinkoffNew": 0,
-    "RosBank": 0,
-    "RaiffeisenBankRussia": 0,
-    "QIWI": 0,
-    "PostBankRussia": 0,
-    "ABank": 0,
-    "RUBfiatbalance": 0,
-    "YandexMoneyNew": 0,
-    "MTSBank": 0,
-    "HomeCreditBank": 0,
-    "Payeer": 0,
-    "Advcash": 0,
+    "TinkoffNew": {},
+    "RosBank": {},
+    "RaiffeisenBankRussia": {},
+    "QIWI": {},
+    "PostBankRussia": {},
+    "ABank": {},
+    "RUBfiatbalance": {},
+    "YandexMoneyNew": {},
+    "MTSBank": {},
+    "HomeCreditBank": {},
+    "Payeer": {},
+    "Advcash": {},
   },
   "BTC": {
-    "TinkoffNew": 0,
-    "RosBank": 0,
-    "RaiffeisenBankRussia": 0,
-    "QIWI": 0,
-    "PostBankRussia": 0,
-    "ABank": 0,
-    "RUBfiatbalance": 0,
-    "YandexMoneyNew": 0,
-    "MTSBank": 0,
-    "HomeCreditBank": 0,
-    "Payeer": 0,
-    "Advcash": 0,
+    "TinkoffNew": {},
+    "RosBank": {},
+    "RaiffeisenBankRussia": {},
+    "QIWI": {},
+    "PostBankRussia": {},
+    "ABank": {},
+    "RUBfiatbalance": {},
+    "YandexMoneyNew": {},
+    "MTSBank": {},
+    "HomeCreditBank": {},
+    "Payeer": {},
+    "Advcash": {},
   },
   "BUSD": {
-    "TinkoffNew": 0,
-    "RosBank": 0,
-    "RaiffeisenBankRussia": 0,
-    "QIWI": 0,
-    "PostBankRussia": 0,
-    "ABank": 0,
-    "RUBfiatbalance": 0,
-    "YandexMoneyNew": 0,
-    "MTSBank": 0,
-    "HomeCreditBank": 0,
-    "Payeer": 0,
-    "Advcash": 0,
+    "TinkoffNew": {},
+    "RosBank": {},
+    "RaiffeisenBankRussia": {},
+    "QIWI": {},
+    "PostBankRussia": {},
+    "ABank": {},
+    "RUBfiatbalance": {},
+    "YandexMoneyNew": {},
+    "MTSBank": {},
+    "HomeCreditBank": {},
+    "Payeer": {},
+    "Advcash": {},
   },
   "BNB": {
-    "TinkoffNew": 0,
-    "RosBank": 0,
-    "RaiffeisenBankRussia": 0,
-    "QIWI": 0,
-    "PostBankRussia": 0,
-    "ABank": 0,
-    "RUBfiatbalance": 0,
-    "YandexMoneyNew": 0,
-    "MTSBank": 0,
-    "HomeCreditBank": 0,
-    "Payeer": 0,
-    "Advcash": 0,
+    "TinkoffNew": {},
+    "RosBank": {},
+    "RaiffeisenBankRussia": {},
+    "QIWI": {},
+    "PostBankRussia": {},
+    "ABank": {},
+    "RUBfiatbalance": {},
+    "YandexMoneyNew": {},
+    "MTSBank": {},
+    "HomeCreditBank": {},
+    "Payeer": {},
+    "Advcash": {},
   },
   "ETH": {
-    "TinkoffNew": 0,
-    "RosBank": 0,
-    "RaiffeisenBankRussia": 0,
-    "QIWI": 0,
-    "PostBankRussia": 0,
-    "ABank": 0,
-    "RUBfiatbalance": 0,
-    "YandexMoneyNew": 0,
-    "MTSBank": 0,
-    "HomeCreditBank": 0,
-    "Payeer": 0,
-    "Advcash": 0,
+    "TinkoffNew": {},
+    "RosBank": {},
+    "RaiffeisenBankRussia": {},
+    "QIWI": {},
+    "PostBankRussia": {},
+    "ABank": {},
+    "RUBfiatbalance": {},
+    "YandexMoneyNew": {},
+    "MTSBank": {},
+    "HomeCreditBank": {},
+    "Payeer": {},
+    "Advcash": {},
   },
   "RUB": {
-    "TinkoffNew": 0,
-    "RosBank": 0,
-    "RaiffeisenBankRussia": 0,
-    "QIWI": 0,
-    "PostBankRussia": 0,
-    "ABank": 0,
-    "RUBfiatbalance": 0,
-    "YandexMoneyNew": 0,
-    "MTSBank": 0,
-    "HomeCreditBank": 0,
-    "Payeer": 0,
-    "Advcash": 0,
+    "TinkoffNew": {},
+    "RosBank": {},
+    "RaiffeisenBankRussia": {},
+    "QIWI": {},
+    "PostBankRussia": {},
+    "ABank": {},
+    "RUBfiatbalance": {},
+    "YandexMoneyNew": {},
+    "MTSBank": {},
+    "HomeCreditBank": {},
+    "Payeer": {},
+    "Advcash": {},
   },
   "SHIB": {
-    "TinkoffNew": 0,
-    "RosBank": 0,
-    "RaiffeisenBankRussia": 0,
-    "QIWI": 0,
-    "PostBankRussia": 0,
-    "ABank": 0,
-    "RUBfiatbalance": 0,
-    "YandexMoneyNew": 0,
-    "MTSBank": 0,
-    "HomeCreditBank": 0,
-    "Payeer": 0,
-    "Advcash": 0,
+    "TinkoffNew": {},
+    "RosBank": {},
+    "RaiffeisenBankRussia": {},
+    "QIWI": {},
+    "PostBankRussia": {},
+    "ABank": {},
+    "RUBfiatbalance": {},
+    "YandexMoneyNew": {},
+    "MTSBank": {},
+    "HomeCreditBank": {},
+    "Payeer": {},
+    "Advcash": {},
   },
 }
 
 dataSort = {}
-dataSort[5000] = dataBuy
+dataSort[5000] = copy.deepcopy(dataBuy)
 for key in range(10000, 300000, 10000):
-  dataSort[key] = dataBuy
+  dataSort[key] = copy.deepcopy(dataBuy)
+
 
 for key1 in asset:
   for key2 in payTypes:
@@ -220,8 +222,8 @@ def conversionBundles(key):
 
         for keyPaySell in dataSort[key][keyAssetBuy]:
           if ((keyAssetBuy + keyAssetSell) in conversionData):
-            priceBuy = float(dataSort[key][keyAssetBuy][keyPayBuy])
-            priceSell = float(dataSort[key][keyAssetSell][keyPaySell])
+            priceBuy = float(dataSort[key][keyAssetBuy][keyPayBuy]["price"])
+            priceSell = float(dataSort[key][keyAssetSell][keyPaySell]["price"])
 
             conversionPrice = conversionData[keyAssetBuy + keyAssetSell]
 
@@ -270,8 +272,8 @@ def conversionBundles(key):
   global threadingIndicator
   threadingIndicator += 1
 
-  with open("conversionBundles.json", "w") as outfile:
-    json.dump(bundlesData, outfile)
+  # with open("conversionBundles.json", "w") as outfile:
+  #   json.dump(bundlesData, outfile)
   
 
 def defaultBundles(key):
@@ -282,8 +284,8 @@ def defaultBundles(key):
     for keyPayBuy in dataSort[key][keyAsset]:
 
       for keyPaySell in dataSort[key][keyAsset]:
-        priceBuy = float(dataSort[key][keyAsset][keyPayBuy])
-        priceSell = float(dataSort[key][keyAsset][keyPaySell])
+        priceBuy = float(dataSort[key][keyAsset][keyPayBuy]["price"])
+        priceSell = float(dataSort[key][keyAsset][keyPaySell]["price"])
         minLimit  = key
         maxLimit  = key + 9999
         if (minLimit == 5000):
@@ -372,9 +374,14 @@ def checkSortData(minLimit, maxLimit, data, asset, payTypes):
   for item in data["data"]:
     minLimitData = int(item["adv"]["minSingleTransAmount"][:-3])
     maxLimitData = int(item["adv"]["maxSingleTransAmount"][:-3])
+
     if ((minLimit >= minLimitData) and (maxLimit <= maxLimitData)):
-      dataSort[minLimit][asset][payTypes] = item["adv"]["price"]
-      break
+      dataSort[minLimit][asset][payTypes]["price"] = item["adv"]["price"]
+      dataSort[minLimit][asset][payTypes]["interval"] = (str(minLimitData) + " - " + str(maxLimitData))
+      return
+    
+    # input()
+  dataSort[minLimit][asset][payTypes]["price"] = 0
 
 def sortData(data, asset, payTypes):
   minLimit = 5000
@@ -385,15 +392,13 @@ def sortData(data, asset, payTypes):
   for minLimit in range(10000, 290000, 10000):
     maxLimit = minLimit + 9999
     # print(minLimit, '-', maxLimit)
-  checkSortData(minLimit, maxLimit, data, asset, payTypes)
+    checkSortData(minLimit, maxLimit, data, asset, payTypes)
   
   minLimit = 290000
   maxLimit = 300000
+  # print(minLimit, '-', maxLimit)
   checkSortData(minLimit, maxLimit, data, asset, payTypes)
 
-  # with open("dataSort.json", "w") as outfile:
-  #   json.dump(dataSort, outfile)
-  # input()
   # pprint(data)
 
 
@@ -412,22 +417,22 @@ def req():
     payTypesId = 0
     assetId = 0
     for key in result:
-      try:
-        if (payTypesId%12 == 0): payTypesId = 0
-        sortData(json.loads(key.text), asset[assetId // 12], payTypes[payTypesId])
-        payTypesId += 1
-        assetId += 1
-      except:
-        print(key.status_code)
-        time.sleep(60)
-        req()
-        payTypesId += 1
-        assetId += 1
+      # try:
+      if (payTypesId%12 == 0): payTypesId = 0
+      sortData(json.loads(key.text), asset[assetId // 12], payTypes[payTypesId])
+      payTypesId += 1
+      assetId += 1
+      # except:
+      #   print(key.status_code)
+      #   time.sleep(60)
+      #   req()
+      #   payTypesId += 1
+      #   assetId += 1
   
-  # with open("dataSort.json", "w") as outfile:
-  #   json.dump(dataSort, outfile)
-  # print("Write successful")
-  # input()
+  with open("dataSort.json", "w") as outfile:
+    json.dump(dataSort, outfile)
+  print("Write successful")
+  input()
 
 
 def conversionReq():

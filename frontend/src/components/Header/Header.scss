@@ -2,8 +2,16 @@
   width: 100%;
   position: fixed;
   background-color: #171717;
-  z-index: 10;
+  z-index: 5;
   height: 80px;
+}
+.header__title{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 265px;
+  font-size: 20px;
+  font-weight: 700;
 }
 .header-box {
   position: absolute;

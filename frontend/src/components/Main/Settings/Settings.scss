@@ -3,8 +3,11 @@
   background-color: #0d0d0d;
   max-width: 225px;
   overflow-y: auto;
+  // overflow-x: hidden;
   height: 100vh;
   width: 100%;
+
+  // position: relative;
   &::-webkit-scrollbar {
     width: 2px;
   }
@@ -19,6 +22,34 @@
   font-size: 16px;
   border-bottom: 2px solid #161616;
   padding: 30px 0 30px 30px;
+  cursor: pointer;
+  &:hover + .settings__nav{
+    opacity: 1;
+    visibility: visible;
+  }
+}
+.settings__nav{
+  opacity: 0;
+  visibility: hidden;
+  background-color: #0d0d0d;
+  position: absolute;
+  top: 0;
+  left: 225px;
+  border-left: 2px solid #161616;
+  transition: all 0.3s;
+  &:hover {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+.settings__nav-item{
+  // padding: 15px;
+  a{
+    padding: 30px;
+  }
+  & + &{
+    border-top: 2px solid #161616;
+  }
 }
 .settings-inner {
 }
