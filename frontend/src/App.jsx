@@ -163,7 +163,6 @@ function App() {
     asyncCall();
   }, []);
 
-  console.log(indicatorLogin);
   return (
     <div className="App">
       <BrowserRouter>

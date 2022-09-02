@@ -185,7 +185,7 @@ dataBuy = {
 
 dataSort = {}
 dataSort[5000] = copy.deepcopy(dataBuy)
-for key in range(10000, 300000, 10000):
+for key in range(10000, 310000, 10000):
   dataSort[key] = copy.deepcopy(dataBuy)
 
 
@@ -227,10 +227,6 @@ def conversionBundles(key):
 
             conversionPrice = conversionData[keyAssetBuy + keyAssetSell]
 
-            minLimit  = key
-            maxLimit  = key + 9999
-            if (minLimit == 5000):
-              maxLimit = 9999
             if(priceBuy != 0 and priceSell != 0):
               liquidity = ((100/priceBuy) * conversionPrice * priceSell)-100
               datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -245,8 +241,6 @@ def conversionBundles(key):
                     keyPaySell,
                     str(priceSell),
                     str(liquidity),
-                    minLimit,
-                    maxLimit,
                   )
                 )
 
@@ -257,15 +251,15 @@ def conversionBundles(key):
       alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
       insert_bundles_query = """
         INSERT INTO bundles_""" + str(key) + """ (datetime, asset_buy, payTypes_buy, price_buy,
-          asset_sell, payTypes_sell, price_sell, liquidity, min_limit, max_limit)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+          asset_sell, payTypes_sell, price_sell, liquidity)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
       """
       with connection.cursor() as cursor:
         cursor.execute(delete_bundles_query)
         cursor.execute(alter_bundles_query)
         cursor.executemany(insert_bundles_query, bundlesData)
         connection.commit()
-      print("INSERT performed")
+      # print("INSERT performed")
   except Error as e:
     print(e)
 
@@ -286,10 +280,7 @@ def defaultBundles(key):
       for keyPaySell in dataSort[key][keyAsset]:
         priceBuy = float(dataSort[key][keyAsset][keyPayBuy]["price"])
         priceSell = float(dataSort[key][keyAsset][keyPaySell]["price"])
-        minLimit  = key
-        maxLimit  = key + 9999
-        if (minLimit == 5000):
-          maxLimit = 9999
+
         if(priceBuy != 0 and priceSell != 0):
           liquidity = ((100/priceBuy) * priceSell)-100
           datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -303,29 +294,9 @@ def defaultBundles(key):
                 keyAsset,
                 keyPaySell,
                 str(priceSell),
-                str(liquidity),
-                minLimit,
-                maxLimit,
+                str(liquidity)
               )
             )
-
-  # print(bundlesData)
-  # with open("bundles.json", "w") as outfile:
-  #   json.dump(bundlesData, outfile)
-  # print("Write")
-  # input()
-
-  # try:
-  #   with connect(host="miha12x4.beget.tech", user="miha12x4_p2p", password="Mm_0214123771", database="miha12x4_p2p") as connection:
-  #     delete_bundles_query = "DELETE FROM bundles"
-  #     alter_bundles_query = "ALTER TABLE bundles AUTO_INCREMENT = 1"
-  #     with connection.cursor() as cursor:
-  #       cursor.execute(delete_bundles_query)
-  #       cursor.execute(alter_bundles_query)
-  #       connection.commit()
-  #     # print("DELETE performed")
-  # except Error as e:
-  #   print(e)
 
   try:
     with connect(host=hostSql, user=userSql, password=passwordSql, database=defaultDatabaseSql) as connection:
@@ -334,15 +305,15 @@ def defaultBundles(key):
       alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
       insert_bundles_query = """
         INSERT INTO bundles_""" + str(key) + """ (datetime, asset_buy, payTypes_buy, price_buy,
-          asset_sell, payTypes_sell, price_sell, liquidity, min_limit, max_limit)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+          asset_sell, payTypes_sell, price_sell, liquidity)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
       """
       with connection.cursor() as cursor:
         cursor.execute(delete_bundles_query)
         cursor.execute(alter_bundles_query)
         cursor.executemany(insert_bundles_query, bundlesData)
         connection.commit()
-      print("INSERT performed")
+      # print("INSERT performed")
   except Error as e:
     print(e)
 
@@ -370,34 +341,26 @@ def defaultBundles(key):
   #     print("Неудачный запрос:", asset, payTypes)
   #     dataBuy[asset][payTypes] = 1
 
-def checkSortData(minLimit, maxLimit, data, asset, payTypes):
+def checkSortData(minLimit, data, asset, payTypes):
   for item in data["data"]:
     minLimitData = int(item["adv"]["minSingleTransAmount"][:-3])
-    maxLimitData = int(item["adv"]["maxSingleTransAmount"][:-3])
+    maxLimitData = int(item["adv"]["dynamicMaxSingleTransAmount"][:-3])
 
-    if ((minLimit >= minLimitData) and (maxLimit <= maxLimitData)):
+    if ((minLimit >= minLimitData) and (minLimit <= maxLimitData)):
       dataSort[minLimit][asset][payTypes]["price"] = item["adv"]["price"]
       dataSort[minLimit][asset][payTypes]["interval"] = (str(minLimitData) + " - " + str(maxLimitData))
       return
     
-    # input()
   dataSort[minLimit][asset][payTypes]["price"] = 0
 
 def sortData(data, asset, payTypes):
   minLimit = 5000
-  maxLimit = 9999
   # print(minLimit, '-', maxLimit)
-  checkSortData(minLimit, maxLimit, data, asset, payTypes)
+  checkSortData(minLimit ,data, asset, payTypes)
 
-  for minLimit in range(10000, 290000, 10000):
-    maxLimit = minLimit + 9999
+  for minLimit in range(10000, 310000, 10000):
     # print(minLimit, '-', maxLimit)
-    checkSortData(minLimit, maxLimit, data, asset, payTypes)
-  
-  minLimit = 290000
-  maxLimit = 300000
-  # print(minLimit, '-', maxLimit)
-  checkSortData(minLimit, maxLimit, data, asset, payTypes)
+    checkSortData(minLimit, data, asset, payTypes)
 
   # pprint(data)
 
@@ -413,12 +376,15 @@ def req():
   data = (grequests.post("https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search", headers=headers, json=d) for d in optionsBuy)
   result = grequests.map(data, exception_handler=exception_handler)
 
+  dataJson = []
+
   if (exceptionIndicator):
     payTypesId = 0
     assetId = 0
     for key in result:
       # try:
       if (payTypesId%12 == 0): payTypesId = 0
+      dataJson.append(json.loads(key.text))
       sortData(json.loads(key.text), asset[assetId // 12], payTypes[payTypesId])
       payTypesId += 1
       assetId += 1
@@ -429,10 +395,12 @@ def req():
       #   payTypesId += 1
       #   assetId += 1
   
-  with open("dataSort.json", "w") as outfile:
-    json.dump(dataSort, outfile)
-  print("Write successful")
-  input()
+  # with open("dataSort.json", "w") as outfile:
+  #   json.dump(dataSort, outfile)
+  # with open("data.json", "w") as outfile:
+  #   json.dump(dataJson, outfile)
+  # print("Write successful")
+  # input()
 
 
 def conversionReq():
@@ -467,8 +435,8 @@ while True:
   conversionReq()
   endTime = datetime.now()
   print("Время затраченное на API запросы: " + str(endTime - startTime))
-  pprint(conversionData)
-  input()
+  # pprint(conversionData)
+  # input()
 
   # Расчёт обычых связок и оиправка их в БД
   startTime = datetime.now()

@@ -14,7 +14,9 @@ const MainConversion = (props) => {
     assets: [],
     payTypes: [],
   });
-  const [settingsSum, setSettingsSum] = useState(undefined);
+  const [settingsSum, setSettingsSum] = useState(5000);
+  const [settingsSumData, setSettingsSumData] = useState(5000);
+  const [intervalGetData, setIntervalGetData] = useState(undefined);
   const [newbundlesData, setNewBundlesData] = useState(undefined);
   const [originalbundlesData, setOriginalBundlesData] = useState(undefined);
 
@@ -74,17 +76,16 @@ const MainConversion = (props) => {
       sum = "5000";
     } else if (settingsSum >= 5000 && settingsSum < 10000) {
       sum = "5000";
-    } else if (settingsSum == 300000) {
-      sum = "290000";
     } else {
       sum = settingsSum.slice(0, -4) + "0000";
     }
 
-    console.log(sum);
     if (settingsSum === undefined || settingsSum === "") {
-      getData("5000");
+      setSettingsSumData("5000")
+      setSettingsSum("5000")
     } else {
-      getData(sum);
+      setSettingsSumData(sum)
+      setSettingsSum(sum)
     }
   }
 
@@ -124,7 +125,7 @@ const MainConversion = (props) => {
       const response = await axios.post(urlGet, optionsData);
       if (response.data.length === 0) {
         setTimeout(() => {
-          getData();
+          getData(sum);
         }, 1000);
       } else {
         let responseResult = response.data.map((e) => {
@@ -144,10 +145,28 @@ const MainConversion = (props) => {
   };
 
   useEffect(() => {
-    getData();
-    // setInterval(() => {
-    //   getData();
-    // }, 10000);
+    clearInterval(intervalGetData);
+    getData(settingsSumData);
+
+    const timer = setInterval(() => {
+      console.log(settingsSumData);
+      getData(settingsSumData);
+    }, 10000)
+
+    return () => clearInterval(timer);
+  }, [settingsSumData]);
+
+
+  useEffect(() => {
+    getData(settingsSumData);
+
+    const timer = setInterval(() => {
+      console.log(intervalGetData);
+      getData(settingsSumData);
+    }, 10000)
+
+    setIntervalGetData(timer)
+    return () => clearInterval(timer);
   }, []);
 
   return (
