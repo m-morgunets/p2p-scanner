@@ -9,10 +9,10 @@ import NoAccess from "./components/NoAccess/NoAccess";
 import Plug from "./components/Plug/Plug";
 import Main from "./components/Main/Main";
 
-export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
-// export const Axios = axios.create({
-//   baseURL: "http://p2p-backend:8080/php-auth-api/",
-// });
+// export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
+export const Axios = axios.create({
+  baseURL: "http://p2p-backend:8080/php-auth-api/",
+});
 
 function App() {
   const [theUser, setUser] = useState(null);

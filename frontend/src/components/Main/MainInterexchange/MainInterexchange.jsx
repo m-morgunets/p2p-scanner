@@ -4,10 +4,10 @@ import axios from "axios";
 import Settings from "../Settings/Settings";
 import Bundles from "../Bundles/Bundles";
 
-import "./MainDefault.scss";
+import "./MainInterexchange.scss";
 
-const MainDefault = (props) => {
-  props.setPageTitle("default");
+const MainInterexchange = (props) => {
+  props.setPageTitle("interexchange");
 
   const exchangeData = [
     { title: "Binance", value: "Binance" },
@@ -20,26 +20,15 @@ const MainDefault = (props) => {
 
   let checkboxState = props.checkboxState;
   let setCheckboxState = props.setCheckboxState;
-  // const [checkboxState, setCheckboxState] = useState({
-  //   Binance: {
-  //     assets: [],
-  //     payTypes: [],
-  //   },
-  //   Huobi: {
-  //     assets: [],
-  //     payTypes: [],
-  //   }
-  // });
 
-  let checkboxStateExchanges = props.checkboxStateExchanges;
-  let setCheckboxStateExchanges = props.setCheckboxStateExchanges;
-  // const [checkboxStateExchanges, setCheckboxStateExchanges] =
-  //   useState("Binance");
 
-  let settingsSum = props.settingsSum;
-  let setSettingsSum = props.setSettingsSum;
-  let settingsSumData = props.settingsSumData;
-  let setSettingsSumData = props.setSettingsSumData;
+  const [checkboxStateExchanges, setCheckboxStateExchanges] =
+    useState("BinHuo");
+
+  let settingsSum = props.settingsSum
+  let setSettingsSum = props.setSettingsSum
+  let settingsSumData = props.settingsSumData
+  let setSettingsSumData = props.setSettingsSumData
   // const [settingsSum, setSettingsSum] = useState(5000);
   // const [settingsSumData, setSettingsSumData] = useState(5000);
   const [intervalGetData, setIntervalGetData] = useState(undefined);
@@ -115,79 +104,33 @@ const MainDefault = (props) => {
     }
   }
 
-  useEffect(() => {
-    for (const key in itemsRefAssets) {
-      if (itemsRefAssets[key] != null) {
-        itemsRefAssets[key].checked = false;
-      }
-    }
-    for (const key in itemsRefAssets) {
-      if (itemsRefAssets[key] != null) {
-        for (const iterator of checkboxState[checkboxStateExchanges].assets) {
-          if (itemsRefAssets[key].defaultValue == iterator) {
-            itemsRefAssets[key].checked = true;
-          }
-        }
-      }
-    }
-
-    for (const key in itemsRefPayTypes) {
-      if (itemsRefPayTypes[key] != null) {
-        itemsRefPayTypes[key].checked = false;
-      }
-    }
-    for (const key in itemsRefPayTypes) {
-      if (itemsRefPayTypes[key] != null) {
-        for (const iterator of checkboxState[checkboxStateExchanges].payTypes) {
-          if (itemsRefPayTypes[key].defaultValue == iterator) {
-            itemsRefPayTypes[key].checked = true;
-          }
-        }
-      }
-    }
-
-    getData(settingsSumData, checkboxStateExchanges);
-  }, [checkboxStateExchanges]);
-
-  function onChangeExchanges(e) {
-    let options = [];
-    let checkboxData = onChange(e, options);
-    setCheckboxStateExchanges(checkboxData[0]);
-
-    // for (const key in itemsRefAssets) {
-    //   console.log(key);
-    // }
-    // itemsRefPayTypes
-    console.log(checkboxData[0]);
-  }
   function onChangeAssets(e) {
     let checkboxData = checkboxState;
-    const options = checkboxData[checkboxStateExchanges].assets;
-    checkboxData[checkboxStateExchanges].assets = onChange(e, options);
+    const options = checkboxData.assets;
+    checkboxData.assets = onChange(e, options);
     setCheckboxState(checkboxData);
 
-    filterData(originalbundlesData, checkboxState[checkboxStateExchanges]);
+    filterData(originalbundlesData, checkboxState);
   }
   function onChangePayTypes(e) {
     let checkboxData = checkboxState;
-    const options = checkboxData[checkboxStateExchanges].payTypes;
-    checkboxData[checkboxStateExchanges].payTypes = onChange(e, options);
+    const options = checkboxData.payTypes;
+    checkboxData.payTypes = onChange(e, options);
     setCheckboxState(checkboxData);
 
-    filterData(originalbundlesData, checkboxState[checkboxStateExchanges]);
+    filterData(originalbundlesData, checkboxState);
   }
 
   // const urlGet = "../../php/getDefaultBundles-prod.php";
-  const urlGet = "http://p2p-backend:8080/getDefaultBundles.php";
+  const urlGet = "http://p2p-backend:8080/getInterexchangeBundles.php";
 
-  const getData = async (sum, exchange) => {
+  const getData = async (sum) => {
     try {
       if (sum === undefined || sum === "") {
         sum = "5000";
       }
       const optionsData = new FormData();
       optionsData.set("sum", sum);
-      optionsData.set("exchange", exchange);
       const response = await axios.post(urlGet, optionsData);
       // console.log(response.data);
       if (response.data.length === 0) {
@@ -202,7 +145,7 @@ const MainDefault = (props) => {
         });
         setOriginalBundlesData(responseResult);
 
-        filterData(responseResult, checkboxState[checkboxStateExchanges]);
+        filterData(responseResult, checkboxState);
         console.log("Update data!");
       }
     } catch (error) {
@@ -213,27 +156,46 @@ const MainDefault = (props) => {
 
   useEffect(() => {
     clearInterval(intervalGetData);
-    getData(settingsSumData, checkboxStateExchanges);
+    getData(settingsSumData);
 
     // const timer = setInterval(() => {
     //   console.log(settingsSumData);
-    //   getData(settingsSumData, checkboxStateExchanges);
+    //   getData(settingsSumData);
     // }, 10000)
 
     // return () => clearInterval(timer);
   }, [settingsSumData]);
 
   useEffect(() => {
-    getData(settingsSumData, checkboxStateExchanges);
-    for (let i = 0; i < 2; i++) {
-      if (itemsRefExchanges[i].defaultValue == checkboxStateExchanges) {
-        itemsRefExchanges[i].checked = true;
+    getData(settingsSumData);
+
+    itemsRefExchanges[0].checked = true;
+    itemsRefExchanges[0].disabled = true;
+    itemsRefExchanges[1].checked = true;
+    itemsRefExchanges[1].disabled = true;
+
+    for (let key in itemsRefAssets) {
+      if (itemsRefAssets[key] != null) {
+        for (const iterator of checkboxState.assets) {
+          if (itemsRefAssets[key].defaultValue == iterator) {
+            itemsRefAssets[key].checked = true;
+          }
+        }
+      }
+    }
+    for (let key in itemsRefPayTypes) {
+      if (itemsRefPayTypes[key] != null) {
+        for (const iterator of checkboxState.payTypes) {
+          if (itemsRefPayTypes[key].defaultValue == iterator) {
+            itemsRefPayTypes[key].checked = true;
+          }
+        }
       }
     }
 
     // const timer = setInterval(() => {
     //   console.log(intervalGetData);
-    //   getData(settingsSumData, checkboxStateExchanges);
+    //   getData(settingsSumData);
     // }, 10000)
 
     // setIntervalGetData(timer)
@@ -243,7 +205,7 @@ const MainDefault = (props) => {
   return (
     <div className="main">
       <Settings
-        onChangeExchanges={onChangeExchanges}
+        // onChangeExchanges={onChangeExchanges}
         onChangeAssets={onChangeAssets}
         onChangePayTypes={onChangePayTypes}
         onChangeSum={onChangeSum}
@@ -255,11 +217,11 @@ const MainDefault = (props) => {
         itemsRefPayTypes={itemsRefPayTypes}
         exchange={checkboxStateExchanges}
         exchangeData={exchangeData}
-        exchangeInputType={"radio"}
+        exchangeInputType={"checkbox"}
       />
       <Bundles bundlesData={newbundlesData} />
     </div>
   );
 };
 
-export default MainDefault;
+export default MainInterexchange;

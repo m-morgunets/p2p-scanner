@@ -1,20 +1,48 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-
-// import Settings from "../Settings/Settings";
-// import Bundles from "../Bundles/Bundles";
+import { useState } from "react";
 
 import "./Main.scss";
 import Header from "../Header/Header";
 import { Navigate, Route, Routes } from "react-router-dom";
 import MainDefault from "./MainDefault/MainDefault";
 import MainConversion from "./MainConversion/MainConversion";
+import MainInterexchange from "./MainInterexchange/MainInterexchange";
 
 const Main = (props) => {
   const [pageTitle, setPageTitle] = useState("dafault");
+
+  const [checkboxStateDefault, setCheckboxStateDefault] = useState({
+    Binance: {
+      assets: [],
+      payTypes: [],
+    },
+    Huobi: {
+      assets: [],
+      payTypes: [],
+    },
+  });
+
+  const [checkboxStateConversion, setCheckboxStateConversion] = useState({
+    exchanges: [],
+    assets: [],
+    payTypes: [],
+  });
+
+  const [checkboxStateInterexchange, setCheckboxStateInterexchange] = useState({
+    exchanges: [],
+    assets: [],
+    payTypes: [],
+  });
+  
+  const [settingsSum, setSettingsSum] = useState(5000);
+  const [settingsSumData, setSettingsSumData] = useState(5000);
+
+  const [checkboxStateExchanges, setCheckboxStateExchanges] =
+    useState("Binance");
+
   const pageTitleData = {
     default: "Стандартный",
     conversion: "Конвертационный",
+    interexchange: "Межбиржевой",
   };
 
   const payTypesData = {
@@ -30,6 +58,11 @@ const Main = (props) => {
     HomeCreditBank: "Хоум Кредит Банк",
     Payeer: "Payeer",
     Advcash: "AdvCash",
+    Sberbank: "Сбербанк",
+    AlfaBank: "Альфа-Банк",
+    VTBBANK: "ВТБ Банк",
+    Sovkombank: "Совкомбанк",
+    SBP: "Система быстрых платежей (СБП)",
   };
 
   return (
@@ -46,6 +79,14 @@ const Main = (props) => {
             <MainDefault
               setPageTitle={setPageTitle}
               payTypesData={payTypesData}
+              checkboxState={checkboxStateDefault}
+              setCheckboxState={setCheckboxStateDefault}
+              settingsSum={settingsSum}
+              setSettingsSum={setSettingsSum}
+              settingsSumData={settingsSumData}
+              setSettingsSumData={setSettingsSumData}
+              checkboxStateExchanges={checkboxStateExchanges}
+              setCheckboxStateExchanges={setCheckboxStateExchanges}
             />
           }
         />
@@ -55,6 +96,27 @@ const Main = (props) => {
             <MainConversion
               setPageTitle={setPageTitle}
               payTypesData={payTypesData}
+              checkboxState={checkboxStateConversion}
+              setCheckboxState={setCheckboxStateConversion}
+              settingsSum={settingsSum}
+              setSettingsSum={setSettingsSum}
+              settingsSumData={settingsSumData}
+              setSettingsSumData={setSettingsSumData}
+            />
+          }
+        />
+        <Route
+          path="/interexchange"
+          element={
+            <MainInterexchange
+              setPageTitle={setPageTitle}
+              payTypesData={payTypesData}
+              checkboxState={checkboxStateInterexchange}
+              setCheckboxState={setCheckboxStateInterexchange}
+              settingsSum={settingsSum}
+              setSettingsSum={setSettingsSum}
+              settingsSumData={settingsSumData}
+              setSettingsSumData={setSettingsSumData}
             />
           }
         />

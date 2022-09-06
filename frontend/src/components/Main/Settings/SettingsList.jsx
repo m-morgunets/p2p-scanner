@@ -2,13 +2,29 @@ import "./Settings.scss";
 import SettingsListItem from "./SettingsListItem";
 
 const SettingsList = (props) => {
-  const settingsItems = props.data.map((p) => (
-    <SettingsListItem
-      onChangeFunc={props.onChangeFunc}
-      value={p.value}
-      title={p.title}
-    />
-  ));
+  let settingsItems;
+  if (props.itemsRef != undefined) {
+    settingsItems = props.data.map((p, i) => (
+      <SettingsListItem
+        onChangeFunc={props.onChangeFunc}
+        value={p.value}
+        title={p.title}
+        name={props.name}
+        type={props.type}
+        itemsRef={(el) => (props.itemsRef[i] = el)}
+      />
+    ));
+  } else {
+    settingsItems = props.data.map((p, i) => (
+      <SettingsListItem
+        onChangeFunc={props.onChangeFunc}
+        value={p.value}
+        title={p.title}
+        name={props.name}
+        type={props.type}
+      />
+    ));
+  }
   // let settingsItems = [];
 
   // for (let i = 0; i < props.data.title.length; i++) {

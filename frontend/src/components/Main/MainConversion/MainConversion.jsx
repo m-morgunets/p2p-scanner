@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 import Settings from "../Settings/Settings";
@@ -9,13 +9,30 @@ import "./MainConversion.scss";
 const MainConversion = (props) => {
   props.setPageTitle("conversion");
 
-  const [checkboxState, setCheckboxState] = useState({
-    exchanges: [],
-    assets: [],
-    payTypes: [],
-  });
-  const [settingsSum, setSettingsSum] = useState(5000);
-  const [settingsSumData, setSettingsSumData] = useState(5000);
+  const exchangeData = [
+    { title: "Binance", value: "Binance" },
+  ];
+
+  const itemsRefExchanges = useRef([]);
+  const itemsRefAssets = useRef([]);
+  const itemsRefPayTypes = useRef([]);
+
+  const [checkboxStateExchanges, setCheckboxStateExchanges] =
+    useState("Binance");
+  let checkboxState = props.checkboxState;
+  let setCheckboxState = props.setCheckboxState;
+  // const [checkboxState, setCheckboxState] = useState({
+  //   exchanges: [],
+  //   assets: [],
+  //   payTypes: [],
+  // });
+
+  let settingsSum = props.settingsSum
+  let setSettingsSum = props.setSettingsSum
+  let settingsSumData = props.settingsSumData
+  let setSettingsSumData = props.setSettingsSumData
+  // const [settingsSum, setSettingsSum] = useState(5000);
+  // const [settingsSumData, setSettingsSumData] = useState(5000);
   const [intervalGetData, setIntervalGetData] = useState(undefined);
   const [newbundlesData, setNewBundlesData] = useState(undefined);
   const [originalbundlesData, setOriginalBundlesData] = useState(undefined);
@@ -112,8 +129,8 @@ const MainConversion = (props) => {
     filterData(originalbundlesData, checkboxState);
   }
 
-  const urlGet = "../../php/getConverBundles-prod.php";
-  // const urlGet = "http://p2p-backend:8080/getConverBundles.php";
+  // const urlGet = "../../php/getConverBundles-prod.php";
+  const urlGet = "http://p2p-backend:8080/getConverBundles.php";
 
   const getData = async (sum) => {
     try {
@@ -159,6 +176,27 @@ const MainConversion = (props) => {
 
   useEffect(() => {
     getData(settingsSumData);
+    itemsRefExchanges[0].checked = true;
+
+    for (let key in itemsRefAssets) {
+      if (itemsRefAssets[key] != null) {
+        for (const iterator of checkboxState.assets) {
+          if (itemsRefAssets[key].defaultValue == iterator) {
+            itemsRefAssets[key].checked = true;
+          }
+        }
+      }
+    }
+    for (let key in itemsRefPayTypes) {
+      if (itemsRefPayTypes[key] != null) {
+        for (const iterator of checkboxState.payTypes) {
+          if (itemsRefPayTypes[key].defaultValue == iterator) {
+            itemsRefPayTypes[key].checked = true;
+          }
+        }
+      }
+    }
+
 
     const timer = setInterval(() => {
       console.log(intervalGetData);
@@ -179,6 +217,12 @@ const MainConversion = (props) => {
         settingsSumVal={settingsSum}
         onKeyDownSum={onKeyDownSum}
         blurFunc={sendingSum}
+        exchange={checkboxStateExchanges}
+        exchangeData={exchangeData}
+        itemsRefExchanges={itemsRefExchanges}
+        itemsRefAssets={itemsRefAssets}
+        itemsRefPayTypes={itemsRefPayTypes}
+        exchangeInputType={"radio"}
       />
       <Bundles logout={props.logout} bundlesData={newbundlesData} />
     </div>

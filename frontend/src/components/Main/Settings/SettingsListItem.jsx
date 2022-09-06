@@ -4,7 +4,8 @@ const SettingsListItem = (props) => {
   return (
     <li className="settings__list-item">
       <label>
-        <input ref={props.refItem} onChange={props.onChangeFunc} type="checkbox" value={props.value} id="" /> <p>{props.title}</p>
+        <input ref={props.itemsRef} name={props.name} onChange={props.onChangeFunc} type={props.type}
+               value={props.value}/> <p>{props.title}</p>
       </label>
     </li>
   );

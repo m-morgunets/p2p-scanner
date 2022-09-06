@@ -60,20 +60,20 @@ payTypesBinance = ["TinkoffNew", "RosBank", "RaiffeisenBankRussia", "QIWI", "Pos
 asset = ["USDT", "BTC", "BUSD", "BNB", "ETH", "RUB", "SHIB"]
 
 payMethodHuobi = {
-  24: "PAYEER",
-  20: "ADVCash",
+  24: "Payeer",
+  20: "Advcash",
   29: "Sberbank",
-  69: "SBP - Fast Bank Transfer",
-  25: "Alfa-bank",
-  27: "VTB BANK",
+  69: "SBP",
+  25: "AlfaBank",
+  27: "VTBBANK",
   361: "Sovkombank",
   9: "QIWI",
-  19: "Yandex",
-  36: "Raiffeisenbank",
-  172: "Home Credit Bank (Russia)",
-  356: "MTS-Bank",
-  357: "Post Bank",
-  28: "Tinkoff",
+  19: "YandexMoneyNew",
+  36: "RaiffeisenBankRussia",
+  172: "HomeCreditBank",
+  356: "MTSBank",
+  357: "PostBankRussia",
+  28: "TinkoffNew",
 }
 cryptoAssetHuobi = {
   1: "BTC",
@@ -307,7 +307,7 @@ for x, element in enumerate(optionsHuobi1):
   optionsHuobi[x // 14].append(copy.deepcopy(element))
 
 # Функция расчёта конвертационных связок внутри Binance и отправка их в БД
-def conversionBundles(data, databaseSql, key):
+def conversionBundles(exchange, data, databaseSql, key):
   bundlesData = []
   
   for keyAssetBuy in data[key]:
@@ -333,9 +333,11 @@ def conversionBundles(data, databaseSql, key):
                 bundlesData.append(
                   (
                     str(datetimeDb),
+                    exchange,
                     keyAssetBuy,
                     keyPayBuy,
                     str(priceBuy),
+                    exchange,
                     keyAssetSell,
                     keyPaySell,
                     str(priceSell),
@@ -349,9 +351,9 @@ def conversionBundles(data, databaseSql, key):
       delete_bundles_query = "DELETE FROM bundles_"+str(key)
       alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
       insert_bundles_query = """
-        INSERT INTO bundles_""" + str(key) + """ (datetime, asset_buy, payTypes_buy, price_buy,
-          asset_sell, payTypes_sell, price_sell, liquidity)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO bundles_""" + str(key) + """ (datetime, exchange_buy, asset_buy, payTypes_buy, price_buy,
+          exchange_sell, asset_sell, payTypes_sell, price_sell, liquidity)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
       """
       with connection.cursor() as cursor:
         cursor.execute(delete_bundles_query)
@@ -369,7 +371,7 @@ def conversionBundles(data, databaseSql, key):
   #   json.dump(bundlesData, outfile)
   
 # Функция расчёта обычных связок внутри биржи (Binance, Huobi) и отправка в БД
-def defaultBundles(data, zeroData, databaseSql, key):
+def defaultBundles(exchange, data, zeroData, databaseSql, key):
   bundlesData = []
 
   
@@ -387,9 +389,11 @@ def defaultBundles(data, zeroData, databaseSql, key):
             bundlesData.append(
               (
                 str(datetimeDb),
+                exchange,
                 keyAsset,
                 keyPayBuy,
                 str(priceBuy),
+                exchange,
                 keyAsset,
                 keyPaySell,
                 str(priceSell),
@@ -403,9 +407,9 @@ def defaultBundles(data, zeroData, databaseSql, key):
       delete_bundles_query = "DELETE FROM bundles_"+str(key)
       alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
       insert_bundles_query = """
-        INSERT INTO bundles_""" + str(key) + """ (datetime, asset_buy, payTypes_buy, price_buy,
-          asset_sell, payTypes_sell, price_sell, liquidity)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO bundles_""" + str(key) + """ (datetime, exchange_buy, asset_buy, payTypes_buy, price_buy,
+          exchange_sell, asset_sell, payTypes_sell, price_sell, liquidity)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
       """
       with connection.cursor() as cursor:
         cursor.execute(delete_bundles_query)
@@ -643,7 +647,7 @@ while True:
   # Расчёт обычых связок и оиправка их в БД
   startTime = datetime.now()
   for key in dataSortBinance:
-    Thread(target=defaultBundles, args=(dataSortBinance, zeroDataBinance, defaultDatabaseSql, key, )).start()
+    Thread(target=defaultBundles, args=("Binance", dataSortBinance, zeroDataBinance, defaultDatabaseSql, key, )).start()
 
   while True:
     if (threadingIndicator == len(dataSortBinance)):
@@ -656,7 +660,7 @@ while True:
   # Расчёт конвертационных связок и оиправка их в БД
   startTime = datetime.now()
   for key in dataSortBinance:
-    Thread(target=conversionBundles, args=(dataSortBinance, conversionDatabaseSql, key, )).start()
+    Thread(target=conversionBundles, args=("Binance", dataSortBinance, conversionDatabaseSql, key, )).start()
 
   while True:
     if (threadingIndicator == len(dataSortBinance)):
@@ -686,7 +690,7 @@ while True:
   # Расчёт связок Huobi и оиправка их в БД
   startTime = datetime.now()
   for key in dataSortHuobi:
-    Thread(target=defaultBundles, args=(dataSortHuobi, zeroDataHuobi, huobiDatabaseSql, key, )).start()
+    Thread(target=defaultBundles, args=("Huobi", dataSortHuobi, zeroDataHuobi, huobiDatabaseSql, key, )).start()
 
   while True:
     if (threadingIndicator == len(dataSortHuobi)):

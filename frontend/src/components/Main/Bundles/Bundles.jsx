@@ -6,6 +6,8 @@ const Bundles = (props) => {
   if (props.bundlesData != undefined) {
     bundlesItems = props.bundlesData.map((p) => (
       <BundlesItem
+        exchangeBuy={p.exchange_buy}
+        exchangeSell={p.exchange_sell}
         assetBuy={p.asset_buy}
         assetSell={p.asset_sell}
         liquidity={p.liquidity}
