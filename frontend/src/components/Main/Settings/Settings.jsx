@@ -88,7 +88,7 @@ const Settings = (props) => {
         <li className="settings__nav-item">
           <NavLink
             className={({ isActive }) => (isActive ? "active" : "")}
-            to="/default"
+            to="/scanner/default"
           >
             Стандартный
           </NavLink>
@@ -96,7 +96,7 @@ const Settings = (props) => {
         <li className="settings__nav-item">
           <NavLink
             className={({ isActive }) => (isActive ? "active" : "")}
-            to="/conversion"
+            to="/scanner/conversion"
           >
             Конвертационный
           </NavLink>
@@ -104,7 +104,7 @@ const Settings = (props) => {
         <li className="settings__nav-item">
           <NavLink
             className={({ isActive }) => (isActive ? "active" : "")}
-            to="/interexchange"
+            to="/scanner/interexchange"
           >
             Межбиржевой
           </NavLink>

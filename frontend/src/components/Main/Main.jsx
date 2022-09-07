@@ -120,7 +120,7 @@ const Main = (props) => {
             />
           }
         />
-        <Route path="/*" element={<Navigate to={"/default"} />} />
+        <Route path="/*" element={<Navigate to={"./default"} />} />
       </Routes>
     </div>
   );

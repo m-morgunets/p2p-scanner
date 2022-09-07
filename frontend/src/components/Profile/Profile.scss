@@ -1,0 +1,19 @@
+.profile{
+  background-repeat: repeat;
+}
+.profile-inner{
+  display: flex;
+  justify-content: center;
+  position: relative;
+  padding-top: 72px;
+}
+.profile__box{
+  // background-color: #000;
+  &:first-child{
+    margin-right: 10px;
+  }
+  &:last-child{
+    width: 370px;
+    position: relative;
+  }
+}

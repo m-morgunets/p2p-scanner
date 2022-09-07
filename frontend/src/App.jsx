@@ -8,6 +8,9 @@ import Registration from "./components/Registration/Registration";
 import NoAccess from "./components/NoAccess/NoAccess";
 import Plug from "./components/Plug/Plug";
 import Main from "./components/Main/Main";
+import Profile from "./components/Profile/Profile";
+import Support from "./components/Support/Support";
+import Community from "./components/Community/Community";
 
 // export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
 export const Axios = axios.create({
@@ -137,6 +140,9 @@ function App() {
     if (!Object.values(formDataSignup).every((val) => val.trim() !== "")) {
       setSuccessMsg(false);
       setErrMsgSignup("Пожалуйста, заполните все обязательные поля!");
+      setTimeout(() => {
+        setErrMsgSignup(false);
+      }, 5000);
       return;
     }
 
@@ -169,17 +175,38 @@ function App() {
         <Routes>
           {theUser && Number(theUser.access) && indicatorLogin && (
             <Route
-              path="/*"
+              path="/scanner/*"
               element={<Main user={theUser} logout={logout} />}
             />
           )}
 
-          {theUser && !Number(theUser.access) && indicatorLogin && (
+          {theUser && (
+            <Route
+              path="/community"
+              element={<Support user={theUser} />}
+            />
+          )}
+
+          {theUser && (
+            <Route
+              path="/support"
+              element={<Community user={theUser} />}
+            />
+          )}
+
+          {theUser && (
+            <Route
+              path="/profile"
+              element={<Profile user={theUser} logout={logout}/>}
+            />
+          )}
+
+          {/* {theUser && !Number(theUser.access) && indicatorLogin && (
             <Route
               path="/"
               element={<NoAccess user={theUser} logout={logout} />}
             />
-          )}
+          )} */}
 
           {!theUser && !indicatorLogin && (
             <Route path="/*" element={<Plug />} />
@@ -220,7 +247,7 @@ function App() {
           {indicatorLogin && (
             <Route
               path="*"
-              element={<Navigate to={theUser ? "/" : "/login"} />}
+              element={<Navigate to={theUser ? "/scanner/*" : "/login"} />}
             />
           )}
         </Routes>

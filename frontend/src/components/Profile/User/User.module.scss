@@ -1,0 +1,63 @@
+.user {
+  background-color: #0d0d0d;
+  padding: 50px;
+  position: fixed;
+}
+.avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.nickname {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 30px 0 15px;
+}
+.date {
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.5;
+}
+.box {
+  margin: 45px 0 50px;
+  color: rgba(255, 255, 255, 0.5);
+}
+.item {
+  overflow: hidden;
+  width: 270px;
+  border: 1px solid #2f2f2f;
+  padding: 20px;
+  &+&{
+    margin-top: 20px;
+  }
+}
+.item__title {
+  font-size: 24px;
+  font-weight: 700;
+
+}
+.item__text {
+  margin-top: 9px;
+  font-size: 16px;
+  b{
+    font-weight: 700;
+  }
+}
+.button {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #af4444;
+  font-size: 24px;
+  font-weight: 700;
+}

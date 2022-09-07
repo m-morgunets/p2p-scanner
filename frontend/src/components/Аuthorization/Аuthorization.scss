@@ -1,32 +1,43 @@
 .authorization {
+  min-width: 100vw;
+  min-height: 100vh;
+  background-repeat: repeat;
+}
+.authorization-wrapper{
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  text-align: center;
-  background: #000;
-  padding: 105px 80px;
-  padding: 50px 80px 105px;
+  text-align: center
 }
-.authorization__subtitle,
-.authorization__title {
-  font-family: "Montserrat";
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+.authorization-box{
+  background: #000;
+  position: relative;
+  box-shadow: 0px 0px 90px 0px rgba(0, 0, 0, 0.5);
+  &+&{
+    margin-top: 14px;
+  }
+  &:last-child{
+    padding: 60px 0 90px;
+  }
 }
 .authorization__subtitle {
-  opacity: 0.5;
-  font-size: 19px;
-  display: flex;
-  justify-content: right;
-  text-decoration: underline;
+  font-weight: 700;
+  opacity: 0.4;
+  font-size: 18px;
   cursor: pointer;
+  position: absolute;
+  top: 40px;
+  right: 40px;
 }
 
 .authorization__title {
   font-size: 56px;
-  margin: 105px 0 75px;
+  font-family: "Montserrat";
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 120px 75px 110px;
 }
 .authorization__input {
   display: block;
@@ -40,37 +51,37 @@
   font-family: "Gilroy";
   font-size: 18px;
   font-weight: 700;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.7);
   padding: 15px;
   outline: none !important;
   text-align: center;
-  &::placeholder {
-    font-family: "Gilroy";
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-  }
+
   & + & {
-    margin: 30px 0 45px;
+    margin-top: 30px;
   }
 }
 .authorization__btn {
-  font-size: 18px;
-  font-weight: 700;
-  border: 1px solid #898989;
-  background-color: #000;
-  color: #fff;
   width: 200px;
   height: 60px;
-  margin-top: 45px;
-  cursor: pointer;
+  margin: 70px auto 0;
   position: relative;
-  &:disabled {
-    // opacity: 0.5;
-    border: 1px solid #1f1f1f;
-    color: #1f1f1f;
+  .authorization__btn-warp{
+    border: 1px solid #898989;
+    background-color: #000;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    width: inherit;
+    height: inherit;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    &:disabled {
+      border: 1px solid #1f1f1f;
+      color: #1f1f1f;
+    }
   }
-  &::before {
+  .authorization__btn-before {
     content: "";
     position: absolute;
     background-color: #1f1f1f;
@@ -78,20 +89,31 @@
     height: inherit;
     top: 12px;
     right: 12px;
-    z-index: -2 !important;
+    z-index: 1;
     transition: all 0.3s;
+    cursor: pointer;
   }
-  &:hover::before {
+  &:hover .authorization__btn-before {
     top: 0;
     right: 0;
+  }
+  &.active{
+    margin: 35px auto 0;
   }
 }
 
 .authorization__err-msg {
-  font-size: 20px;
+  font-size: 18px;
   border: 1px solid #fff;
   display: block;
   padding: 15px;
-  max-width: 425px;
-  margin: 0 auto;
+  max-width: 350px;
+  margin: 35px auto 0;
+  opacity: 0.5;
+}
+
+.authorization__bg{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
 }
