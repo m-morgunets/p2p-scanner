@@ -12,8 +12,8 @@ const Support = (props) => {
         <div className="support__title">как с нами связаться</div>
         <div className="support-box">
           <div className="support__subtitle">телеграм разработчика -</div>
-          <a target="_blank" href="https://t.me/m_morgunets" className="support__link">
-            https://t.me/m_morgunets
+          <a target="_blank" href="https://t.me/michael_morgunets" className="support__link">
+            https://t.me/michael_morgunets
           </a>
           <p>{"< клик"}</p>
         </div>

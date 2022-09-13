@@ -12,10 +12,17 @@ from mysql.connector import connect, Error
 
 
 
-hostSql = "miha12x4.beget.tech"
-defaultDatabaseSql = "miha12x4_default"
-conversionDatabaseSql = "miha12x4_conver"
-passwordSql = "Mm_0214123771"
+# hostSql = "miha12x4.beget.tech"
+# userSql = "miha12x4_p2p"
+# passwordSql = "Mm_0214123771"
+# databaseSql = "miha12x4_p2p"
+hostSql = "server77.hosting.reg.ru"
+userSql = "u1655934_default"
+passwordSql = "qeqRlSET97uR8m1z"
+defaultDatabaseSql = "u1655934_defaultbundles"
+conversionDatabaseSql = "u1655934_conversionbundles"
+huobiDatabaseSql = "u1655934_huobibundles"
+interExchangeDatabaseSql = "u1655934_interexchange"
 
 timeJson = []
 optionsBuy = []
@@ -48,9 +55,37 @@ currenciesnName = {
   "ETHRUB": ["ETH", "RUB"]
 }
 
-payTypes = ["TinkoffNew", "RosBank", "RaiffeisenBankRussia", "QIWI", "PostBankRussia", "ABank",
+payTypesBinance = ["TinkoffNew", "RosBank", "RaiffeisenBankRussia", "QIWI", "PostBankRussia", "ABank",
   "RUBfiatbalance", "YandexMoneyNew", "MTSBank", "HomeCreditBank", "Payeer", "Advcash"]
 asset = ["USDT", "BTC", "BUSD", "BNB", "ETH", "RUB", "SHIB"]
+
+payMethodHuobi = {
+  24: "Payeer",
+  20: "Advcash",
+  29: "Sberbank",
+  69: "SBP",
+  25: "AlfaBank",
+  27: "VTBBANK",
+  361: "Sovkombank",
+  9: "QIWI",
+  19: "YandexMoneyNew",
+  36: "RaiffeisenBankRussia",
+  172: "HomeCreditBank",
+  356: "MTSBank",
+  357: "PostBankRussia",
+  28: "TinkoffNew",
+}
+cryptoAssetHuobi = {
+  1: "BTC",
+  2: "USDT",
+  3: "ETH",
+  4: "HT",
+  5: "EOS",
+  6: "HUSD",
+  7: "XRP",
+  8: "LTC",
+}
+payTypesHuobi = [24, 20, 29, 69, 25, 27, 361, 9, 19, 36, 172, 356, 357, 28]
 
 headers = {
   "Accept": "*/*",
@@ -64,6 +99,22 @@ headers = {
   "Pragma": "no-cache",
   "TE": "Trailers",
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0",
+}
+
+headersHuobi = {
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive",
+    "content-type": "application/json",
+    'authority': 'otc-api.ri16.com',
+    'accept': 'application/json, text/plain, */*',
+    'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+    'client-type': 'web',
+    'origin': 'https://www.huobi.com',
+    'otc-language': 'ru-RU',
+    'portal': 'web',
+    'referer': 'https://www.huobi.com/',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36',
+    'x-requested-with': 'XMLHttpRequest',
 }
 
 options = {
@@ -178,13 +229,14 @@ dataBuy = {
   },
 }
 
-dataSort = {}
-dataSort[5000] = copy.deepcopy(dataBuy)
+dataSortBinance = {}
+zeroDataBinance = copy.deepcopy(dataBuy)
+dataSortBinance[5000] = copy.deepcopy(dataBuy)
 for key in range(10000, 310000, 10000):
-  dataSort[key] = copy.deepcopy(dataBuy)
+  dataSortBinance[key] = copy.deepcopy(dataBuy)
 
 for key1 in asset:
-  for key2 in payTypes:
+  for key2 in payTypesBinance:
     optionsBuy.append(
     {
       "asset": key1,
@@ -201,26 +253,79 @@ for key1 in asset:
 for url in currencies:
   conversionReqUrls.append("https://api.binance.com/api/v3/ticker/price?symbol=" + url)
 
+# Создание объекта для данных
+dataSortHuobi = {}
+zeroDataHuobi = {}
+for key1 in cryptoAssetHuobi:
+  zeroDataHuobi[cryptoAssetHuobi[key1]] = {}
+  for key2 in payMethodHuobi:
+    zeroDataHuobi[cryptoAssetHuobi[key1]][payMethodHuobi[key2]] = {}
+dataSortHuobi[5000] = {}
+for key1 in cryptoAssetHuobi:
+  dataSortHuobi[5000][cryptoAssetHuobi[key1]] = {}
+  for key2 in payMethodHuobi:
+    dataSortHuobi[5000][cryptoAssetHuobi[key1]][payMethodHuobi[key2]] = {}
+for key1 in range(10000, 310000, 10000):
+  dataSortHuobi[key1] = {}
+  for key2 in cryptoAssetHuobi:
+    dataSortHuobi[key1][cryptoAssetHuobi[key2]] = {}
+    for key3 in payMethodHuobi:
+      dataSortHuobi[key1][cryptoAssetHuobi[key2]][payMethodHuobi[key3]] = {}
 
-def conversionBundles(key):
+optionsHuobi = {
+  0: [],
+  1: [],
+  2: [],
+  3: [],
+  4: [],
+  5: [],
+  6: [],
+  7: []
+}
+optionsHuobi1 = []
+for key1 in cryptoAssetHuobi:
+  for key2 in payMethodHuobi:
+    optionsHuobi1.append(
+    {
+      'coinId': str(key1),
+      'currency': '11',
+      'tradeType': 'sell',
+      'currPage': '1',
+      'payMethod': str(key2),
+      'acceptOrder': '0',
+      'country': '',
+      'blockType': 'general',
+      'online': '1',
+      'range': '0',
+      'amount': '',
+      'onlyTradable': 'false',
+      'isFollowed': 'false',
+    }
+  )
+
+for x, element in enumerate(optionsHuobi1):
+  optionsHuobi[x // 14].append(copy.deepcopy(element))
+
+# Функция расчёта конвертационных связок внутри Binance и отправка их в БД
+def conversionBundles(exchange, data, databaseSql, key):
   bundlesData = []
   
-  for keyAssetBuy in dataSort[key]:
+  for keyAssetBuy in data[key]:
 
-    for keyAssetSell in dataSort[key]:
+    for keyAssetSell in data[key]:
 
       if (keyAssetBuy == keyAssetSell):
         break
 
-      for keyPayBuy in dataSort[key][keyAssetBuy]:
+      for keyPayBuy in data[key][keyAssetBuy]:
 
-        for keyPaySell in dataSort[key][keyAssetBuy]:
+        for keyPaySell in data[key][keyAssetBuy]:
           if ((keyAssetBuy + keyAssetSell) in conversionData):
-            priceBuy = float(dataSort[key][keyAssetBuy][keyPayBuy]["price"])
-            priceSell = float(dataSort[key][keyAssetSell][keyPaySell]["price"])
+            priceBuy = float(data[key][keyAssetBuy][keyPayBuy]["price"])
+            priceSell = float(data[key][keyAssetSell][keyPaySell]["price"])
 
             conversionPrice = conversionData[keyAssetBuy + keyAssetSell]
-            
+
             if(priceBuy != 0 and priceSell != 0):
               liquidity = ((100/priceBuy) * conversionPrice * priceSell)-100
               datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -228,50 +333,51 @@ def conversionBundles(key):
                 bundlesData.append(
                   (
                     str(datetimeDb),
+                    exchange,
                     keyAssetBuy,
                     keyPayBuy,
                     str(priceBuy),
+                    exchange,
                     keyAssetSell,
                     keyPaySell,
                     str(priceSell),
-                    str(liquidity)
+                    str(liquidity),
                   )
                 )
 
   try:
-    with connect(host=hostSql, user=conversionDatabaseSql, password=passwordSql, database=conversionDatabaseSql) as connection:
+    with connect(host=hostSql, user=userSql, password=passwordSql, database=databaseSql) as connection:
       datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
       delete_bundles_query = "DELETE FROM bundles_"+str(key)
       alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
       insert_bundles_query = """
-        INSERT INTO bundles_""" + str(key) + """ (datetime, asset_buy, payTypes_buy, price_buy,
-          asset_sell, payTypes_sell, price_sell, liquidity)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO bundles_""" + str(key) + """ (datetime, exchange_buy, asset_buy, payTypes_buy, price_buy,
+          exchange_sell, asset_sell, payTypes_sell, price_sell, liquidity)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
       """
       with connection.cursor() as cursor:
         cursor.execute(delete_bundles_query)
         cursor.execute(alter_bundles_query)
         cursor.executemany(insert_bundles_query, bundlesData)
         connection.commit()
-      # print("INSERT performed")
   except Error as e:
     print(e)
 
   global threadingIndicator
   threadingIndicator += 1
   
-
-def defaultBundles(key):
+# Функция расчёта обычных связок внутри биржи (Binance, Huobi) и отправка в БД
+def defaultBundles(exchange, data, zeroData, databaseSql, key):
   bundlesData = []
 
   
-  for keyAsset in dataSort[key]:
-    for keyPayBuy in dataSort[key][keyAsset]:
+  for keyAsset in data[key]:
+    for keyPayBuy in data[key][keyAsset]:
 
-      for keyPaySell in dataSort[key][keyAsset]:
-        priceBuy = float(dataSort[key][keyAsset][keyPayBuy]["price"])
-        priceSell = float(dataSort[key][keyAsset][keyPaySell]["price"])
-        
+      for keyPaySell in data[key][keyAsset]:
+        priceBuy = float(data[key][keyAsset][keyPayBuy]["price"])
+        priceSell = float(zeroData[keyAsset][keyPaySell]["price"])
+
         if(priceBuy != 0 and priceSell != 0):
           liquidity = ((100/priceBuy) * priceSell)-100
           datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -279,9 +385,11 @@ def defaultBundles(key):
             bundlesData.append(
               (
                 str(datetimeDb),
+                exchange,
                 keyAsset,
                 keyPayBuy,
                 str(priceBuy),
+                exchange,
                 keyAsset,
                 keyPaySell,
                 str(priceSell),
@@ -290,58 +398,161 @@ def defaultBundles(key):
             )
 
   try:
-    with connect(host=hostSql, user=defaultDatabaseSql, password=passwordSql, database=defaultDatabaseSql) as connection:
+    with connect(host=hostSql, user=userSql, password=passwordSql, database=databaseSql) as connection:
       datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
       delete_bundles_query = "DELETE FROM bundles_"+str(key)
       alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
       insert_bundles_query = """
-        INSERT INTO bundles_""" + str(key) + """ (datetime, asset_buy, payTypes_buy, price_buy,
-          asset_sell, payTypes_sell, price_sell, liquidity)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO bundles_""" + str(key) + """ (datetime, exchange_buy, asset_buy, payTypes_buy, price_buy,
+          exchange_sell, asset_sell, payTypes_sell, price_sell, liquidity)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
       """
       with connection.cursor() as cursor:
         cursor.execute(delete_bundles_query)
         cursor.execute(alter_bundles_query)
         cursor.executemany(insert_bundles_query, bundlesData)
         connection.commit()
-      # print("INSERT performed")
   except Error as e:
     print(e)
 
   global threadingIndicator
   threadingIndicator += 1
 
-def checkSortData(minLimit, data, asset, payTypes):
+# Функция расчёта межбиржевых связок и отправка в БД
+def interExchangeBundles(exchange_1, data_1, exchange_2, data_2, databaseSql, key):
+  bundlesData = []
+
+  bundlesData += enumerateBundles(exchange_1, data_1, exchange_2, data_2, key)
+  bundlesData += enumerateBundles(exchange_2, data_2, exchange_1, data_1, key)
+
+  try:
+    with connect(host=hostSql, user=userSql, password=passwordSql, database=databaseSql) as connection:
+      datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+      delete_bundles_query = "DELETE FROM bundles_"+str(key)
+      alter_bundles_query = "ALTER TABLE bundles_" + str(key) + " AUTO_INCREMENT = 1"
+      insert_bundles_query = """
+        INSERT INTO bundles_""" + str(key) + """ (datetime, exchange_buy, asset_buy, payTypes_buy, price_buy,
+        exchange_sell, asset_sell, payTypes_sell, price_sell, liquidity)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+      """
+      with connection.cursor() as cursor:
+        cursor.execute(delete_bundles_query)
+        cursor.execute(alter_bundles_query)
+        cursor.executemany(insert_bundles_query, bundlesData)
+        connection.commit()
+  except Error as e:
+    print(e)
+
+  global threadingIndicator
+  threadingIndicator += 1
+
+# Функция для перебора данных (используется только в функции interExchangeBundles)
+def enumerateBundles(exchangeBuy, dataBuy, exchangeSell, dataSell, key):
+  bundlesData = []
+
+  for keyAsset in dataBuy[key]:
+    for keyPayBuy in dataBuy[key][keyAsset]:
+      try:
+        for keyPaySell in dataSell[key][keyAsset]:
+          priceBuy = float(dataBuy[key][keyAsset][keyPayBuy]["price"])
+          priceSell = float(dataSell[key][keyAsset][keyPaySell]["price"])
+          
+          if(priceBuy != 0 and priceSell != 0):
+            liquidity = ((100/priceBuy) * priceSell)-100
+            datetimeDb = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            if (liquidity > 0.1):
+              bundlesData.append(
+                (
+                  str(datetimeDb),
+                  exchangeBuy,
+                  keyAsset,
+                  keyPayBuy,
+                  str(priceBuy),
+                  exchangeSell,
+                  keyAsset,
+                  keyPaySell,
+                  str(priceSell),
+                  str(liquidity)
+                )
+              )
+      except:
+        pass
+      
+
+  return bundlesData
+
+
+def checkSortDataBinance(minLimit, data, asset, payTypes):
+  global dataSortBinance
+
   for item in data["data"]:
     minLimitData = int(item["adv"]["minSingleTransAmount"][:-3])
     maxLimitData = int(item["adv"]["dynamicMaxSingleTransAmount"][:-3])
 
     if ((minLimit >= minLimitData) and (minLimit <= maxLimitData)):
-      dataSort[minLimit][asset][payTypes]["price"] = item["adv"]["price"]
-      dataSort[minLimit][asset][payTypes]["interval"] = (str(minLimitData) + " - " + str(maxLimitData))
+      dataSortBinance[minLimit][asset][payTypes]["price"] = item["adv"]["price"]
+      dataSortBinance[minLimit][asset][payTypes]["interval"] = (str(minLimitData) + " - " + str(maxLimitData))
       return
     
-  dataSort[minLimit][asset][payTypes]["price"] = 0
+  dataSortBinance[minLimit][asset][payTypes]["price"] = 0
 
-def sortData(data, asset, payTypes):
+def sortDataBinance(data, asset, payTypes):
+  try:
+    zeroDataBinance[asset][payTypes]["price"] = data["data"][0]["adv"]["price"]
+  except:
+    try:
+      zeroDataBinance[asset][payTypes]["price"] = data["data"][1]["adv"]["price"]
+    except:
+      zeroDataBinance[asset][payTypes]["price"] = 0
+
   minLimit = 5000
-  checkSortData(minLimit, data, asset, payTypes)
+  checkSortDataBinance(minLimit ,data, asset, payTypes)
 
   for minLimit in range(10000, 310000, 10000):
-    checkSortData(minLimit, data, asset, payTypes)
+    checkSortDataBinance(minLimit, data, asset, payTypes)
 
 
+
+def checkSortDataHuobi(minLimit, data, asset, payTypes):
+  global dataSortHuobi
+
+  for item in data["data"]:
+    minLimitData = int(item["minTradeLimit"][:-3])
+    maxLimitData = int(item["maxTradeLimit"][:-3])
+
+    if ((minLimit >= minLimitData) and (minLimit <= maxLimitData)):
+      dataSortHuobi[minLimit][asset][payTypes]["price"] = item["price"]
+      dataSortHuobi[minLimit][asset][payTypes]["interval"] = (str(minLimitData) + " - " + str(maxLimitData))
+      return
+    
+  dataSortHuobi[minLimit][asset][payTypes]["price"] = 0
+
+def sortDataHuobi(data, asset, payTypes):
+  try:
+    zeroDataHuobi[asset][payTypes]["price"] = data["data"][0]["price"]
+  except:
+    try:
+      zeroDataHuobi[asset][payTypes]["price"] = data["data"][1]["price"]
+    except:
+      zeroDataHuobi[asset][payTypes]["price"] = 0
+  
+  minLimit = 5000
+  checkSortDataHuobi(minLimit, data, asset, payTypes)
+
+  for minLimit in range(10000, 310000, 10000):
+    checkSortDataHuobi(minLimit, data, asset, payTypes)
 
 def exception_handler(request, exception):
   global exceptionIndicator
   print("Request failed")
   exceptionIndicator = False
 
-def req():
+def reqBinance():
   global exceptionIndicator
   exceptionIndicator = True
   data = (grequests.post("https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search", headers=headers, json=d) for d in optionsBuy)
   result = grequests.map(data, exception_handler=exception_handler)
+
 
   if (exceptionIndicator):
     payTypesId = 0
@@ -349,16 +560,34 @@ def req():
     for key in result:
       try:
         if (payTypesId%12 == 0): payTypesId = 0
-        sortData(json.loads(key.text), asset[assetId // 12], payTypes[payTypesId])
+        sortDataBinance(json.loads(key.text), asset[assetId // 12], payTypesBinance[payTypesId])
         payTypesId += 1
         assetId += 1
       except:
         print(key.status_code)
         time.sleep(60)
-        req()
+        reqBinance()
         payTypesId += 1
         assetId += 1
 
+def reqHuobi(options, assetId):
+  global threadingIndicator
+  
+  payTypesId = 0
+  for p in options:
+    try:
+      response = requests.get("https://otc-api.ri16.com/v1/data/trade-market", params=p, headers=headersHuobi)
+      if (payTypesId%14 == 0): payTypesId = 0
+      sortDataHuobi(json.loads(response.text), cryptoAssetHuobi[assetId + 1], payMethodHuobi[payTypesHuobi[payTypesId]])
+    except:
+      try:
+        pprint(response.status_code)
+      except:
+        print("Критическая ошибка запроса!")
+
+    payTypesId += 1
+
+  threadingIndicator += 1
 
 def conversionReq():
   global exceptionIndicator
@@ -376,30 +605,29 @@ def conversionReq():
         conversionData[currenciesSell + currenciesBuy] = (1 / float(dataJson["price"]))
       except:
         print(key.status_code)
-        time.sleep(60)
-        conversionReq()
-
 
 while True:
+  threadingIndicator = 0
+
   # Запросы для расчёта обычных связок
   startTime = datetime.now()
-  req()
+  reqBinance()
   endTime = datetime.now()
-  print("Время затраченное на API запросы: " + str(endTime - startTime))
+  print("Время затраченное на API запросы (Binance p2p): " + str(endTime - startTime))
   
   # Запросы курса (по маркету) для конвертационных связок
   startTime = datetime.now()
   conversionReq()
   endTime = datetime.now()
-  print("Время затраченное на API запросы: " + str(endTime - startTime))
+  print("Время затраченное на API запросы (Binance курсы валют): " + str(endTime - startTime))
 
   # Расчёт обычых связок и оиправка их в БД
   startTime = datetime.now()
-  for key in dataSort:
-    Thread(target=defaultBundles, args=(key, )).start()
+  for key in dataSortBinance:
+    Thread(target=defaultBundles, args=("Binance", dataSortBinance, zeroDataBinance, defaultDatabaseSql, key, )).start()
 
   while True:
-    if (threadingIndicator == len(dataSort)):
+    if (threadingIndicator == len(dataSortBinance)):
       endTime = datetime.now()
       print("Время затраченное на MySQL запросы (default): " + str(endTime - startTime))
       threadingIndicator = 0
@@ -408,11 +636,11 @@ while True:
 
   # Расчёт конвертационных связок и оиправка их в БД
   startTime = datetime.now()
-  for key in dataSort:
-    Thread(target=conversionBundles, args=(key, )).start()
+  for key in dataSortBinance:
+    Thread(target=conversionBundles, args=("Binance", dataSortBinance, conversionDatabaseSql, key, )).start()
 
   while True:
-    if (threadingIndicator == len(dataSort)):
+    if (threadingIndicator == len(dataSortBinance)):
       endTime = datetime.now()
       print("Время затраченное на MySQL запросы (conversion): " + str(endTime - startTime))
       threadingIndicator = 0
@@ -420,3 +648,46 @@ while True:
     time.sleep(0.5)
 
 
+  # Запросы для получения данных с Huobi
+  startTime = datetime.now()
+
+  for x, key in enumerate(optionsHuobi):
+    # reqHuobi(optionsHuobi[key], x)
+    Thread(target=reqHuobi, args=(optionsHuobi[key], x, )).start()
+
+  while True:
+    if (threadingIndicator == len(cryptoAssetHuobi)):
+      endTime = datetime.now()
+      print("Время затраченное на API запросы (Huobi p2p): " + str(endTime - startTime))
+      threadingIndicator = 0
+      break
+    time.sleep(0.5)
+
+
+  # Расчёт связок Huobi и оиправка их в БД
+  startTime = datetime.now()
+  for key in dataSortHuobi:
+    Thread(target=defaultBundles, args=("Huobi", dataSortHuobi, zeroDataHuobi, huobiDatabaseSql, key, )).start()
+
+  while True:
+    if (threadingIndicator == len(dataSortHuobi)):
+      endTime = datetime.now()
+      print("Время затраченное на MySQL запросы (Huobi): " + str(endTime - startTime))
+      threadingIndicator = 0
+      break
+    time.sleep(0.5)
+
+  # Расчёт межбиржевых связок (Binance, Huobi) и оиправка их в БД
+  startTime = datetime.now()
+  for key in dataSortBinance:
+    # interExchangeBundles("Binance", dataSortBinance, 'Huobi', dataSortHuobi, interExchangeDatabaseSql, key)
+    Thread(target=interExchangeBundles, 
+      args=("Binance", dataSortBinance, 'Huobi', dataSortHuobi, interExchangeDatabaseSql, key, )).start()
+
+  while True:
+    if (threadingIndicator == len(dataSortHuobi)):
+      endTime = datetime.now()
+      print("Время затраченное на MySQL запросы (Межиржевые Binance + Huobi): " + str(endTime - startTime))
+      threadingIndicator = 0
+      break
+    time.sleep(0.5)

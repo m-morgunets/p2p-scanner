@@ -10,6 +10,8 @@ import MainInterexchange from "./MainInterexchange/MainInterexchange";
 const Main = (props) => {
   const [pageTitle, setPageTitle] = useState("dafault");
 
+  const [mainPage, setMainPage] = useState(true);
+
   const [checkboxStateDefault, setCheckboxStateDefault] = useState({
     Binance: {
       assets: [],
@@ -71,6 +73,7 @@ const Main = (props) => {
         pageTitle={pageTitleData[pageTitle]}
         user={props.user}
         logout={props.logout}
+        mainPage={mainPage}
       />
       <Routes>
         <Route

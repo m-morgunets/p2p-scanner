@@ -13,16 +13,16 @@ const Community = (props) => {
 
         <div className="community-box">
           <div className="community__subtitle">телеграм-канал проекта -</div>
-          <a target="_blank" href="https://t.me/m_morgunets" className="community__link">
-            https://t.me/m_morgunets
+          <a target="_blank" href="https://t.me/p2p_scanner_ru" className="community__link">
+            https://t.me/p2p_scanner_ru
           </a>
           <p>{"< клик"}</p>
         </div>
 
         <div className="community-box">
           <div className="community__subtitle">телеграм-чат -</div>
-          <a target="_blank" href="https://t.me/m_morgunets" className="community__link">
-            https://t.me/m_morgunets
+          <a target="_blank" href="https://t.me/p2p_chat_ru" className="community__link">
+            https://t.me/p2p_chat_ru
           </a>
           <p>{"< клик"}</p>
         </div>

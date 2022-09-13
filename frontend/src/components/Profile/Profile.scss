@@ -1,18 +1,30 @@
-.profile{
+body {
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #161616;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #2c2c2c;
+    border-radius: 5px;
+  }
+}
+.profile {
   background-repeat: repeat;
 }
-.profile-inner{
+.profile-inner {
   display: flex;
   justify-content: center;
   position: relative;
   padding-top: 72px;
 }
-.profile__box{
+.profile__box {
   // background-color: #000;
-  &:first-child{
+  &:first-child {
     margin-right: 10px;
   }
-  &:last-child{
+  &:last-child {
     width: 370px;
     position: relative;
   }

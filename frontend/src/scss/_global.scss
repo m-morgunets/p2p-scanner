@@ -47,24 +47,3 @@ button {
   padding: 0 20px;
   margin: 0 auto;
 }
-
-.default-title {
-  font-weight: 100;
-  font-size: 40px;
-  text-transform: uppercase;
-}
-
-@media (max-width: 900px) {
-  .default-title {
-    font-size: 36px;
-    line-height: 46px !important;
-  }
-}
-
-@media (max-width: 500px) {
-  .default-title {
-    text-align: left !important;
-    font-size: 30px;
-    line-height: 38px !important;
-  }
-}

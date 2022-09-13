@@ -146,7 +146,7 @@ const MainDefault = (props) => {
       }
     }
 
-    getData(settingsSumData, checkboxStateExchanges);
+    // getData(settingsSumData, checkboxStateExchanges);
   }, [checkboxStateExchanges]);
 
   function onChangeExchanges(e) {
@@ -177,23 +177,25 @@ const MainDefault = (props) => {
     filterData(originalbundlesData, checkboxState[checkboxStateExchanges]);
   }
 
-  // const urlGet = "../../php/getDefaultBundles-prod.php";
-  const urlGet = "http://p2p-backend:8080/getDefaultBundles.php";
+  const urlGet = "../../php/getDefaultBundles-prod.php";
+  // const urlGet = "http://p2p-backend:8080/getDefaultBundles.php";
 
   const getData = async (sum, exchange) => {
+
+    if (sum === undefined || sum === "") {
+      sum = "5000";
+    }
+    const optionsData = new FormData();
+    optionsData.set("sum", sum);
+    optionsData.set("exchange", exchange);
+
     try {
-      if (sum === undefined || sum === "") {
-        sum = "5000";
-      }
-      const optionsData = new FormData();
-      optionsData.set("sum", sum);
-      optionsData.set("exchange", exchange);
       const response = await axios.post(urlGet, optionsData);
       // console.log(response.data);
       if (response.data.length === 0) {
         setTimeout(() => {
-          getData(sum);
-        }, 1000);
+          getData(sum, exchange);
+        }, 2000);
       } else {
         let responseResult = response.data.map((e) => {
           e.payTypes_buyText = props.payTypesData[e.payTypes_buy];
@@ -208,6 +210,7 @@ const MainDefault = (props) => {
     } catch (error) {
       console.error("Ошибка в запросе!");
       console.error(error);
+      console.log(optionsData);
     }
   };
 
@@ -215,13 +218,13 @@ const MainDefault = (props) => {
     clearInterval(intervalGetData);
     getData(settingsSumData, checkboxStateExchanges);
 
-    // const timer = setInterval(() => {
-    //   console.log(settingsSumData);
-    //   getData(settingsSumData, checkboxStateExchanges);
-    // }, 10000)
+    const timer = setInterval(() => {
+      console.log(checkboxStateExchanges);
+      getData(settingsSumData, checkboxStateExchanges);
+    }, 10000)
 
-    // return () => clearInterval(timer);
-  }, [settingsSumData]);
+    return () => clearInterval(timer);
+  }, [settingsSumData, checkboxStateExchanges]);
 
   useEffect(() => {
     getData(settingsSumData, checkboxStateExchanges);
@@ -231,13 +234,13 @@ const MainDefault = (props) => {
       }
     }
 
-    // const timer = setInterval(() => {
-    //   console.log(intervalGetData);
-    //   getData(settingsSumData, checkboxStateExchanges);
-    // }, 10000)
+    const timer = setInterval(() => {
+      console.log(checkboxStateExchanges);
+      getData(settingsSumData, checkboxStateExchanges);
+    }, 10000)
 
-    // setIntervalGetData(timer)
-    // return () => clearInterval(timer);
+    setIntervalGetData(timer)
+    return () => clearInterval(timer);
   }, []);
 
   return (

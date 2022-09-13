@@ -8,9 +8,7 @@ const Header = (props) => {
 
       <div className="header-box">
         <NavLink
-          className={({ isActive }) =>
-            isActive ? "header__link active" : "header__link"
-          }
+          className={props.mainPage ? "header__link active" : "header__link"}
           to="/scanner/*"
         >
           <p>{"<< открыть сканнер"}</p>
@@ -40,7 +38,7 @@ const Header = (props) => {
         >
           <div
             className="header__user-avatar"
-            style={{ backgroundImage: `url("./assets/avatar.jpg")` }}
+            // style={{ backgroundImage: `url("./assets/avatar.jpg")` }}
           ></div>
           <div className="header__user-inner">
             <div className="header__user-name">{props.user.name}</div>

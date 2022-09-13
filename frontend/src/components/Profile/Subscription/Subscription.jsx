@@ -67,7 +67,7 @@ const Subscription = (props) => {
               - конвертационный
               <br />
               - биржи + гарантекс
-              <br />- межвалютный
+              <br />- Binance + BestChange
             </div>
           </div>
 
@@ -97,7 +97,7 @@ const Subscription = (props) => {
             через Гарантекс, разные валюты, страны и так далее
           </div>
 
-          <button className={s.item__button}>
+          <button disabled className={s.item__button}>
             <div className={s.item__button__warp}>подключить</div>
             <div className={s.item__button__before}></div>
           </button>
@@ -115,7 +115,7 @@ const Subscription = (props) => {
               - конвертационный
               <br />
               - биржи + гарантекс
-              <br />- межвалютный
+              <br />- Binance + BestChange
             </div>
           </div>
 
@@ -145,7 +145,7 @@ const Subscription = (props) => {
             предоставлении доступа оптом сразу нескольким сотрудникам
           </div>
 
-          <button className={s.item__button}>
+          <button disabled className={s.item__button}>
             <div className={s.item__button__warp}>подключить</div>
             <div className={s.item__button__before}></div>
           </button>

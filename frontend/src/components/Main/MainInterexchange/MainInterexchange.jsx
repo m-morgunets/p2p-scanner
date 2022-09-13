@@ -121,8 +121,8 @@ const MainInterexchange = (props) => {
     filterData(originalbundlesData, checkboxState);
   }
 
-  // const urlGet = "../../php/getDefaultBundles-prod.php";
-  const urlGet = "http://p2p-backend:8080/getInterexchangeBundles.php";
+  const urlGet = "../../php/getInterexchangeBundles-prod.php";
+  // const urlGet = "http://p2p-backend:8080/getInterexchangeBundles.php";
 
   const getData = async (sum) => {
     try {
@@ -158,12 +158,12 @@ const MainInterexchange = (props) => {
     clearInterval(intervalGetData);
     getData(settingsSumData);
 
-    // const timer = setInterval(() => {
-    //   console.log(settingsSumData);
-    //   getData(settingsSumData);
-    // }, 10000)
+    const timer = setInterval(() => {
+      console.log(settingsSumData);
+      getData(settingsSumData);
+    }, 10000)
 
-    // return () => clearInterval(timer);
+    return () => clearInterval(timer);
   }, [settingsSumData]);
 
   useEffect(() => {
@@ -193,13 +193,13 @@ const MainInterexchange = (props) => {
       }
     }
 
-    // const timer = setInterval(() => {
-    //   console.log(intervalGetData);
-    //   getData(settingsSumData);
-    // }, 10000)
+    const timer = setInterval(() => {
+      console.log(intervalGetData);
+      getData(settingsSumData);
+    }, 10000)
 
-    // setIntervalGetData(timer)
-    // return () => clearInterval(timer);
+    setIntervalGetData(timer)
+    return () => clearInterval(timer);
   }, []);
 
   return (

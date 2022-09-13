@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import "./Registration.scss";
+import "./RecoveryPass.scss";
 
-const Registration = (props) => {
+const SetNewPass = (props) => {
   return (
     <div
       style={{ backgroundImage: `url("./assets/bg.jpg")` }}
@@ -9,32 +9,19 @@ const Registration = (props) => {
     >
       <div className="authorization-wrapper">
         <div className="authorization-box">
-          <Link to="/login" className="authorization__subtitle">
+          <Link onClick={props.resetCode} to="/login" className="authorization__subtitle">
             {"<-- Вход"}
           </Link>
           <div className="authorization__title">p2p_scanner</div>
         </div>
         <form onSubmit={props.submitForm} className="authorization-box">
-          <input
-            name="name"
-            onChange={props.onChangeInput}
-            value={props.formData.name}
-            placeholder="your name"
-            type="text"
-            className="authorization__input"
-          />
-          <input
-            name="email"
-            onChange={props.onChangeInput}
-            value={props.formData.email}
-            placeholder="email"
-            type="email"
-            className="authorization__input"
-          />
+          <div className="recoverypass__text">
+            Введите новый пароль:
+          </div>
           <input
             name="password"
             onChange={props.onChangeInput}
-            value={props.formData.password}
+            value={props.formData}
             placeholder="password"
             type="password"
             className="authorization__input"
@@ -60,13 +47,9 @@ const Registration = (props) => {
               disabled={props.wait}
               className="authorization__btn-warp"
             >
-              {"register--->"}
+              {"final--->"}
             </button>
             <div className="authorization__btn-before"></div>
-          </div>
-          <div className="authorization__btn-signature">
-            регистрируясь в нашем сервисе вы подтвеждаете согласие с политикой
-            обрбаотки пероснальный данных
           </div>
         </form>
       </div>
@@ -74,4 +57,4 @@ const Registration = (props) => {
   );
 };
 
-export default Registration;
+export default SetNewPass;

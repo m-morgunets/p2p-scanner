@@ -14,12 +14,22 @@
   }
   .authorization__btn-signature{
     position: absolute;
-    left: 100%;
-    top: 50%;
-    transform: translate(15px, -50%);
+    bottom: 80px;
+    right: 45px;
     font-size: 10px;
     line-height: 15px;
     opacity: 0.5;
     width: 140px;text-align: left;
   }
+  .authorization-box:last-child{
+    padding: 60px 0 90px;
+  }
+}
+
+.сonfirmation__text{
+  font-size: 20px;
+  line-height: 28px;
+}
+.сonfirmation .authorization__input{
+  margin-top: 60px;
 }

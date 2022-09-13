@@ -101,8 +101,15 @@
     z-index: 1;
     transition: all 0.3s;
   }
+  &:disabled .item__button__warp{
+    border: 1px solid rgba(137, 137, 137, 0.2);
+    color: rgba(255, 255, 255, 0.2);
+  }
   &:hover .item__button__before{
     top: 0;
     left: 0;
+  }
+  &:disabled:hover .item__button__before{
+    top: 5px;
   }
 }

@@ -18,7 +18,7 @@
     margin-top: 14px;
   }
   &:last-child{
-    padding: 60px 0 90px;
+    padding: 60px 0 60px;
   }
 }
 .authorization__subtitle {
@@ -97,6 +97,10 @@
     top: 0;
     right: 0;
   }
+  &:hover .authorization__btn-warp:disabled + .authorization__btn-before {
+    top: 12px;
+    right: 12px;
+  }
   &.active{
     margin: 35px auto 0;
   }
@@ -116,4 +120,12 @@
   position: absolute;
   width: 100vw;
   height: 100vh;
+}
+
+.newpass{
+  margin-top: 50px;
+  font-weight: 700;
+  opacity: 0.4;
+  font-size: 18px;
+  cursor: pointer;
 }

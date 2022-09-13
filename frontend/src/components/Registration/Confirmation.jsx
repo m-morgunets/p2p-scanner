@@ -1,34 +1,33 @@
 import { Link } from "react-router-dom";
-import "./Аuthorization.scss";
+import "./Registration.scss";
 
-const Аuthorization = (props) => {
+const Confirmation = (props) => {
   return (
     <div
       style={{ backgroundImage: `url("./assets/bg.jpg")` }}
-      className="authorization"
+      className="authorization registration"
     >
       <div className="authorization-wrapper">
         <div className="authorization-box">
-          <Link to="/signup" className="authorization__subtitle">
-            {"Регистрация -->"}
-          </Link>
+          <div onClick={props.resetCode} className="authorization__subtitle">
+            {"<-- Вход"}
+          </div>
           <div className="authorization__title">p2p_scanner</div>
         </div>
-        <form className="authorization-box" onSubmit={props.submitForm}>
+        <form
+          onSubmit={props.submitForm}
+          className="authorization-box сonfirmation"
+        >
+          <div className="сonfirmation__text">
+            На указанную почту был отпрвален код,
+            <br /> который необходимо ввести ниже:
+          </div>
           <input
-            name="email"
-            onChange={props.onChangeInput}
-            value={props.formData.email}
-            placeholder="email"
-            type="email"
-            className="authorization__input"
-          />
-          <input
-            name="password"
-            onChange={props.onChangeInput}
-            value={props.formData.password}
-            placeholder="password"
-            type="password"
+            name="code"
+            onChange={props.onChangeInputCode}
+            value={props.code}
+            placeholder="000000"
+            type="text"
             className="authorization__input"
           />
           {props.redirect && (
@@ -39,7 +38,7 @@ const Аuthorization = (props) => {
           )}
           <div
             className={
-              props.errMsg || props.redirect
+              props.successMsg || props.errMsg || props.redirect
                 ? "authorization__btn active"
                 : "authorization__btn"
             }
@@ -49,15 +48,14 @@ const Аuthorization = (props) => {
               disabled={props.wait}
               className="authorization__btn-warp"
             >
-              {"start--->"}
+              {props.textBtn}
             </button>
             <div className="authorization__btn-before"></div>
           </div>
-          <Link to="/password-recovery" className="newpass">Забыли пароль?</Link>
         </form>
       </div>
     </div>
   );
 };
 
-export default Аuthorization;
+export default Confirmation;
