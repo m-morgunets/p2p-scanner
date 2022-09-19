@@ -16,7 +16,7 @@ const RecoveryPass = (props) => {
         </div>
         <form onSubmit={props.submitForm} className="authorization-box">
           <div className="recoverypass__text">
-            Введите почту на которую <br /> зарегестрирован аккаунт:
+            Введите почту на которую <br /> зарегистрирован аккаунт:
           </div>
           <input
             name="email"

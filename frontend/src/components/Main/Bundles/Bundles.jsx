@@ -23,8 +23,8 @@ const Bundles = (props) => {
     <div className="bundles">
       <table className="bundles__table">
         <tr className="bundles__table-title">
-          <th colspan={4}>Покупаем</th>
-          <th colspan={5}>Продаем</th>
+          <th colspan={4}>Покупаем <p>как Тейкер</p></th>
+          <th colspan={5}>Продаем <p>как Мейкер</p></th>
         </tr>
         <tr className="bundles__table-subtitle">
           <th>Биржа</th>

@@ -12,6 +12,7 @@ const MainInterexchange = (props) => {
   const exchangeData = [
     { title: "Binance", value: "Binance" },
     { title: "Huobi", value: "Huobi" },
+    { title: "Bizlato", value: "Bizlato" },
   ];
 
   const itemsRefExchanges = useRef([]);
@@ -42,7 +43,9 @@ const MainInterexchange = (props) => {
           .filter((e) => filterDataInFunc(e.asset_buy, options.assets))
           .filter((e) => filterDataInFunc(e.asset_sell, options.assets))
           .filter((e) => filterDataInFunc(e.payTypes_buy, options.payTypes))
-          .filter((e) => filterDataInFunc(e.payTypes_sell, options.payTypes));
+          .filter((e) => filterDataInFunc(e.payTypes_sell, options.payTypes))
+          .filter((e) => filterDataInFunc(e.exchange_buy, options.exchanges))
+          .filter((e) => filterDataInFunc(e.exchange_sell, options.exchanges));
 
         setNewBundlesData(newData);
       }
@@ -104,6 +107,15 @@ const MainInterexchange = (props) => {
     }
   }
 
+  function onChangeExchanges(e) {
+    let checkboxData = checkboxState;
+    const options = checkboxData.exchanges;
+    checkboxData.exchanges = onChange(e, options);
+    setCheckboxState(checkboxData);
+
+    console.log(checkboxData.exchanges);
+    filterData(originalbundlesData, checkboxState);
+  }
   function onChangeAssets(e) {
     let checkboxData = checkboxState;
     const options = checkboxData.assets;
@@ -169,11 +181,15 @@ const MainInterexchange = (props) => {
   useEffect(() => {
     getData(settingsSumData);
 
-    itemsRefExchanges[0].checked = true;
-    itemsRefExchanges[0].disabled = true;
-    itemsRefExchanges[1].checked = true;
-    itemsRefExchanges[1].disabled = true;
-
+    for (let key in itemsRefExchanges) {
+      if (itemsRefExchanges[key] != null) {
+        for (const iterator of checkboxState.exchanges) {
+          if (itemsRefExchanges[key].defaultValue == iterator) {
+            itemsRefExchanges[key].checked = true;
+          }
+        }
+      }
+    }
     for (let key in itemsRefAssets) {
       if (itemsRefAssets[key] != null) {
         for (const iterator of checkboxState.assets) {
@@ -205,7 +221,7 @@ const MainInterexchange = (props) => {
   return (
     <div className="main">
       <Settings
-        // onChangeExchanges={onChangeExchanges}
+        onChangeExchanges={onChangeExchanges}
         onChangeAssets={onChangeAssets}
         onChangePayTypes={onChangePayTypes}
         onChangeSum={onChangeSum}

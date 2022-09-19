@@ -21,6 +21,10 @@ const Main = (props) => {
       assets: [],
       payTypes: [],
     },
+    Bizlato: {
+      assets: [],
+      payTypes: [],
+    },
   });
 
   const [checkboxStateConversion, setCheckboxStateConversion] = useState({
@@ -47,32 +51,11 @@ const Main = (props) => {
     interexchange: "Межбиржевой",
   };
 
-  const payTypesData = {
-    TinkoffNew: "Тинькофф",
-    RosBank: "Росбанк",
-    RaiffeisenBankRussia: "Райффайзенбанк",
-    QIWI: "QIWI",
-    PostBankRussia: "Почта Банк",
-    ABank: "A-Bank",
-    RUBfiatbalance: "BinancePay (RUB)",
-    YandexMoneyNew: "Юmoney",
-    MTSBank: "МТС-Банк",
-    HomeCreditBank: "Хоум Кредит Банк",
-    Payeer: "Payeer",
-    Advcash: "AdvCash",
-    Sberbank: "Сбербанк",
-    AlfaBank: "Альфа-Банк",
-    VTBBANK: "ВТБ Банк",
-    Sovkombank: "Совкомбанк",
-    SBP: "Система быстрых платежей (СБП)",
-  };
-
   return (
     <div>
       <Header
         pageTitle={pageTitleData[pageTitle]}
         user={props.user}
-        logout={props.logout}
         mainPage={mainPage}
       />
       <Routes>
@@ -81,7 +64,7 @@ const Main = (props) => {
           element={
             <MainDefault
               setPageTitle={setPageTitle}
-              payTypesData={payTypesData}
+              payTypesData={props.payTypesData}
               checkboxState={checkboxStateDefault}
               setCheckboxState={setCheckboxStateDefault}
               settingsSum={settingsSum}
@@ -98,7 +81,7 @@ const Main = (props) => {
           element={
             <MainConversion
               setPageTitle={setPageTitle}
-              payTypesData={payTypesData}
+              payTypesData={props.payTypesData}
               checkboxState={checkboxStateConversion}
               setCheckboxState={setCheckboxStateConversion}
               settingsSum={settingsSum}
@@ -113,7 +96,7 @@ const Main = (props) => {
           element={
             <MainInterexchange
               setPageTitle={setPageTitle}
-              payTypesData={payTypesData}
+              payTypesData={props.payTypesData}
               checkboxState={checkboxStateInterexchange}
               setCheckboxState={setCheckboxStateInterexchange}
               settingsSum={settingsSum}

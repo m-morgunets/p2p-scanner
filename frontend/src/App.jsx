@@ -14,6 +14,7 @@ import Community from "./components/Community/Community";
 import Confirmation from "./components/Registration/Confirmation";
 import RecoveryPass from "./components/RecoveryPass/RecoveryPass";
 import SetNewPass from "./components/RecoveryPass/SetNewPass";
+import Exchangedata from "./components/Exchangedata/Exchangedata";
 
 export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
 // export const Axios = axios.create({
@@ -21,6 +22,28 @@ export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
 // });
 
 function App() {
+
+  const payTypesData = {
+    TinkoffNew: "Тинькофф",
+    RosBankNew: "Росбанк",
+    RaiffeisenBank: "Райффайзенбанк",
+    QIWI: "QIWI",
+    PostBankNew: "Почта Банк",
+    ABank: "A-Bank",
+    RUBfiatbalance: "BinancePay (RUB)",
+    YandexMoneyNew: "Юmoney",
+    MTSBank: "МТС-Банк",
+    HomeCreditBank: "Хоум Кредит Банк",
+    Payeer: "Payeer",
+    Advcash: "AdvCash",
+    Sberbank: "Сбербанк",
+    AlfaBank: "Альфа-Банк",
+    VTBBANK: "ВТБ Банк",
+    Sovkombank: "Совкомбанк",
+    SBP: "Система быстрых платежей (СБП)",
+  };
+
+
   const navigate = useNavigate();
 
   const [timerLogout, setTimerLogout] = useState(undefined);
@@ -529,7 +552,7 @@ function App() {
         {theUser && theUser.access && indicatorLogin && (
           <Route
             path="/scanner/*"
-            element={<Main user={theUser} logout={logout} />}
+            element={<Main user={theUser} payTypesData={payTypesData} logout={logout} />}
           />
         )}
 
@@ -539,6 +562,10 @@ function App() {
 
         {theUser && (
           <Route path="/community" element={<Community user={theUser} />} />
+        )}
+
+        {theUser && theUser.access && indicatorLogin && (
+          <Route path="/exchangedata" element={<Exchangedata payTypesData={payTypesData} user={theUser} logout={logout} />} />
         )}
 
         {theUser && (

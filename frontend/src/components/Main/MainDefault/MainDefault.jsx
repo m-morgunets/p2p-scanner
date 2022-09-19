@@ -12,6 +12,7 @@ const MainDefault = (props) => {
   const exchangeData = [
     { title: "Binance", value: "Binance" },
     { title: "Huobi", value: "Huobi" },
+    { title: "Bizlato", value: "Bizlato" },
   ];
 
   const itemsRefExchanges = useRef([]);
@@ -228,7 +229,7 @@ const MainDefault = (props) => {
 
   useEffect(() => {
     getData(settingsSumData, checkboxStateExchanges);
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
       if (itemsRefExchanges[i].defaultValue == checkboxStateExchanges) {
         itemsRefExchanges[i].checked = true;
       }

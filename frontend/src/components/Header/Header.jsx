@@ -17,6 +17,14 @@ const Header = (props) => {
           className={({ isActive }) =>
             isActive ? "header__link active" : "header__link"
           }
+          to="/exchangedata"
+        >
+          <p>биржевые данные</p>
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive ? "header__link active" : "header__link"
+          }
           to="/community"
         >
           <p>комьюнити</p>
