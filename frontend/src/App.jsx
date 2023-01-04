@@ -16,10 +16,10 @@ import RecoveryPass from "./components/RecoveryPass/RecoveryPass";
 import SetNewPass from "./components/RecoveryPass/SetNewPass";
 import Exchangedata from "./components/Exchangedata/Exchangedata";
 
-export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
-// export const Axios = axios.create({
-//   baseURL: "http://p2p-backend:8080/php-auth-api/",
-// });
+// export const Axios = axios.create({ baseURL: "../../php/php-auth-api/" });
+export const Axios = axios.create({
+  baseURL: "http://p2p-backend:8080/php-auth-api/",
+});
 
 function App() {
 
@@ -94,9 +94,9 @@ function App() {
   const loggedInCheck = async () => {
     const loginToken = localStorage.getItem("loginToken");
     // console.log(loginToken);
-    Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-    Axios.defaults.headers.common['X-CSRF-TOKEN'] = "Bearer " + loginToken;
-    // Axios.defaults.headers.common["Authorization"] = "Bearer " + loginToken;
+    // Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    // Axios.defaults.headers.common['X-CSRF-TOKEN'] = "Bearer " + loginToken;
+    Axios.defaults.headers.common["Authorization"] = "Bearer " + loginToken;
     if (loginToken) {
       const { data } = await Axios.get("getUser.php");
       if (data.success && data.user) {
@@ -123,9 +123,9 @@ function App() {
 
   const loggedInCheckLogin = async () => {
     const loginToken = localStorage.getItem("loginToken");
-    Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-    Axios.defaults.headers.common['X-CSRF-TOKEN'] = "Bearer " + loginToken;
-    // Axios.defaults.headers.common["Authorization"] = "Bearer " + loginToken;
+    // Axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+    // Axios.defaults.headers.common['X-CSRF-TOKEN'] = "Bearer " + loginToken;
+    Axios.defaults.headers.common["Authorization"] = "Bearer " + loginToken;
     if (loginToken) {
       const { data } = await Axios.get("getUser.php");
       if (data.success && data.user) {

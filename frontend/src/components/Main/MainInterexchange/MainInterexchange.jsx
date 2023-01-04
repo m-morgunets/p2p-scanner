@@ -133,8 +133,8 @@ const MainInterexchange = (props) => {
     filterData(originalbundlesData, checkboxState);
   }
 
-  const urlGet = "../../php/getInterexchangeBundles-prod.php";
-  // const urlGet = "http://p2p-backend:8080/getInterexchangeBundles.php";
+  // const urlGet = "../../php/getInterexchangeBundles-prod.php";
+  const urlGet = "http://p2p-backend:8080/getInterexchangeBundles.php";
 
   const getData = async (sum) => {
     try {

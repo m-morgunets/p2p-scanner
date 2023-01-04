@@ -129,8 +129,8 @@ const MainConversion = (props) => {
     filterData(originalbundlesData, checkboxState);
   }
 
-  const urlGet = "../../php/getConverBundles-prod.php";
-  // const urlGet = "http://p2p-backend:8080/getConverBundles.php";
+  // const urlGet = "../../php/getConverBundles-prod.php";
+  const urlGet = "http://p2p-backend:8080/getConverBundles.php";
 
   const getData = async (sum) => {
     try {

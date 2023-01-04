@@ -178,8 +178,8 @@ const MainDefault = (props) => {
     filterData(originalbundlesData, checkboxState[checkboxStateExchanges]);
   }
 
-  const urlGet = "../../php/getDefaultBundles-prod.php";
-  // const urlGet = "http://p2p-backend:8080/getDefaultBundles.php";
+  // const urlGet = "../../php/getDefaultBundles-prod.php";
+  const urlGet = "http://p2p-backend:8080/getDefaultBundles.php";
 
   const getData = async (sum, exchange) => {
 
