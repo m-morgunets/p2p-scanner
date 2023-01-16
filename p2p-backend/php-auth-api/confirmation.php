@@ -3,10 +3,6 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// define('DB_HOST', 'localhost');
-// define('DB_NAME', 'u1655934_p2p');
-// define('DB_USER', 'u1655934_default');
-// define('DB_PASSWORD', 'qeqRlSET97uR8m1z');
 
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'p2p');
