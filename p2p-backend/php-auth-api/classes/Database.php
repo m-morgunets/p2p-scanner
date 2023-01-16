@@ -2,12 +2,6 @@
 class Database
 {
 
-    // CHANGE THE DB INFO ACCORDING TO YOUR DATABASE
-    // private $db_host = 'localhost';
-    // private $db_name = 'u1655934_p2p';
-    // private $db_username = 'u1655934_default';
-    // private $db_password = 'qeqRlSET97uR8m1z';
-
     private $db_host = 'localhost';
     private $db_name = 'p2p';
     private $db_username = 'root';
