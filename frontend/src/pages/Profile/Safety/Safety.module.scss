@@ -1,0 +1,81 @@
+.section {
+}
+.title {
+	font-size: 24px;
+	font-weight: 700;
+	margin-top: 70px;
+}
+.safety_form {
+}
+.button {
+	width: 245px;
+	height: 60px;
+	position: relative;
+	background-color: transparent;
+	border: none;
+	.button__warp {
+		color: #fff;
+		font-size: 18px;
+		font-weight: 700;
+		border: 1px solid #898989;
+		background-color: #0d0d0d;
+		width: inherit;
+		height: inherit;
+		position: relative;
+		z-index: 2;
+		cursor: pointer;
+		&:disabled {
+			border: 1px solid rgba(137, 137, 137, 0.3);
+			color: rgba(255, 255, 255, 0.3);
+		}
+	}
+	.button__before {
+		position: absolute;
+		background-color: #1f1f1f;
+		width: inherit;
+		height: inherit;
+		top: 9px;
+		right: 9px;
+		z-index: 1;
+		transition: all 0.3s;
+		cursor: pointer;
+	}
+	&:hover .button__before {
+		top: 0;
+		right: 0;
+	}
+	&:hover .button__warp:disabled + .button__before {
+		top: 9px;
+		right: 9px;
+	}
+}
+.safety__title {
+	font-size: 18px;
+	opacity: 0.5;
+	margin: 35px 0 25px;
+}
+.safety__input {
+	font-size: 16px;
+	color: rgba(255, 255, 255, 0.2);
+	border: 1px solid #898989;
+	background-color: transparent;
+	display: block;
+	padding: 12px 18px;
+	width: 380px;
+	& + & {
+		margin-top: 20px;
+	}
+}
+.button__box {
+	margin-top: 40px;
+	display: flex;
+	align-items: center;
+}
+.err__msg {
+	margin-left: 40px;
+	max-width: 300px;
+	text-align: center;
+	font-size: 18px;
+	opacity: 0.5;
+	line-height: 20px;
+}

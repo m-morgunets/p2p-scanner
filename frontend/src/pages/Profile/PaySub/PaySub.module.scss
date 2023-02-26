@@ -1,0 +1,19 @@
+.section {
+  padding: 30px 0 45px;
+}
+.title{
+  font-size: 24px;
+  font-weight: 700;
+  color: #636264;
+  text-align: center;
+  margin-bottom: 30px;
+  p{
+    font-weight: 400;
+    display: inline-block;
+    margin: 0;
+  }
+}
+.inner{
+  display: flex;
+  justify-content: center;
+}

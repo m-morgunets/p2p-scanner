@@ -1,0 +1,79 @@
+@import-normalize;
+
+@font-face {
+  font-family: "Gilroy";
+  src: local("Gilroy Bold"), local("Gilroy-Bold"),
+    url(./assets/fonts/Gilroy-Bold.woff2) format("woff2"),
+    url(./assets/fonts/Gilroy-Bold.woff) format("woff"),
+    url(./assets/fonts/Gilroy-Bold.ttf) format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: local("Gilroy Regular"), local("Gilroy-Regular"),
+    url(./assets/fonts/Gilroy-Regular.woff2) format("woff2"),
+    url(./assets/fonts/Gilroy-Regular.woff) format("woff"),
+    url(./assets/fonts/Gilroy-Regular.ttf) format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Montserrat";
+  src: local("Montserrat Black"), local("Montserrat-Black"),
+    url(./assets/fonts/Montserrat-Black.woff2) format("woff2"),
+    url(./assets/fonts/Montserrat-Black.woff) format("woff"),
+    url(./assets/fonts/Montserrat-Black.ttf) format("truetype");
+  font-weight: 900;
+}
+
+html {
+  box-sizing: border-box;
+  // overflow-y: hidden;
+  // &.active {
+  //   overflow-y: auto;
+  // }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  color: #fff;
+  background-color: #171717;
+  background-image: url("./assets/images/bg.jpg");
+  font-family: "Gilroy";
+  font-weight: 400;
+}
+
+body.scanner {
+  background-image: unset;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+  outline: none;
+}
+
+ul,
+li,
+button,
+p {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}

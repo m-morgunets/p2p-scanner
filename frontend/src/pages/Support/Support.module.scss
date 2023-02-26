@@ -1,0 +1,38 @@
+.section {
+	padding-top: 72px;
+}
+.wrapper {
+	max-width: 1200px;
+	margin: 0 auto;
+	width: 100%;
+	background-color: #0d0d0d;
+	padding: 85px 0 110px 75px;
+}
+.title {
+	font-size: 40px;
+	font-weight: 700;
+	text-align: center;
+}
+.box {
+	display: flex;
+	align-items: center;
+	padding: 70px 0 25px;
+	p {
+		opacity: 0.5;
+		position: relative;
+		top: 10px;
+	}
+}
+.subtitle {
+	font-size: 24px;
+}
+.link {
+	font-size: 16px;
+	padding: 10px 60px 10px 15px;
+	margin: 0 10px 0 17px;
+	border: 1px solid #707070;
+}
+.text {
+	font-size: 18px;
+	opacity: 0.5;
+}
