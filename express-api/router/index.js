@@ -27,7 +27,7 @@ router.get("/conversionbundles", exchangeController.getConversionBundles);
 router.get("/interexchangebundles", exchangeController.getInterexchangeBundles);
 router.get("/exchangedata/:dataType", exchangeController.getExchangeData);
 
-// Роутинг получения настроек поиска
+// Роутинг получения настроек для сортирвоки связок
 router.get("/settings", settingsControlller.getSettings);
 
 module.exports = router;

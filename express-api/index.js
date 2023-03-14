@@ -8,7 +8,6 @@ const errorMiddlewares = require("./middlewares/error-middlewares");
 
 
 const PORT = process.env.PORT || 5000;
-// console.log(PORT);
 const app = express();
 
 app.use(express.json({ extended: true }));
@@ -19,7 +18,6 @@ app.use(
 		origin: process.env.CLIENT_URL,
 	})
 );
-
 app.use("/api", router);
 app.use(errorMiddlewares);
 

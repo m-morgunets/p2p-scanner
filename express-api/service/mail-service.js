@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 
 class MailService {
 	constructor() {
+		// Создание соединения для отправки писем
 		this.transporter = nodemailer.createTransport({
 			host: process.env.SMTP_HOST,
 			port: process.env.SMTP_PORT,
@@ -13,6 +14,7 @@ class MailService {
 		});
 	}
 
+	// Функция отправки письма
 	async sendActivationEmail(to, link) {
 		await this.transporter.sendMail({
 			from: process.env.SMTP_USER,

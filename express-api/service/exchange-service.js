@@ -3,11 +3,6 @@ const connectDataBase = require("../data/config_db");
 class ExchangeService {
 	// Функция создания текста запроса и задания параметров
 	static setRequestData(sum, exchange, payTypes, assets) {
-		// // Перевод строк с данными в массивы
-		// let exchangeArray = exchange.split(",");
-		// let payTypesArray = payTypes.split(",");
-		// let assetsArray = assets.split(",");
-
 		// Задание начала запроса
 		let query = "SELECT * FROM bundles_?";
 		// Задание пустого массива для внесения частей запроса
@@ -90,7 +85,7 @@ class ExchangeService {
   // Получение межбиржевых связок
   async getInterexchangeBundles(sum, exchange, payTypes, assets) {
 		const { query, value } = ExchangeService.setRequestData(sum, exchange, payTypes, assets);
-		
+
     const data = await connectDataBase('interexchange').query(query, value).catch(err => {throw err});
     return data;
   }
