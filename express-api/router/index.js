@@ -1,85 +1,3 @@
-// // Загружаем соединение с пулом MySQL
-// const createPool = require("../data/config_db");
-// let pool = createPool("p2p");
-
-// // Создаем пул MySQL
-// // const pool = mysql.createPool(config);
-
-// const router = (app) => {
-// 	// Получаем только GET-запросы с конечной точкой "/"
-// 	app.get("/", (req, res) => {
-// 		res.json({
-// 			message: "Node.js and Express REST API",
-// 		});
-// 	});
-
-// 	// Получаем только GET-запросы с конечной точкой "/users"
-// 	app.get("/users", (req, res) => {
-// 		pool.query(
-// 			"SELECT id, dateRegistration, name, email, access, subscription, lastPayDate, nextPayDate FROM users",
-// 			(error, result) => {
-// 				if (error) throw error;
-
-// 				res.json(result);
-// 			}
-// 		);
-// 	});
-
-// 	// Отображение одного пользователя по ID
-// 	app.get("/users/:id", (req, res) => {
-// 		const id = req.params.id;
-
-// 		pool.query(
-// 			"SELECT id, dateRegistration, name, email, access, subscription, lastPayDate, nextPayDate FROM users WHERE id = ?",
-// 			id,
-// 			(error, result) => {
-// 				if (error) throw error;
-
-// 				res.json(result);
-// 			}
-// 		);
-// 	});
-
-// 	// Добавление нового пользователя
-// 	app.post("/users", (req, res) => {
-// 		pool.query("INSERT INTO users SET ?", req.body, (error, result) => {
-// 			if (error) throw error;
-
-// 			res.status(201).json(`User added with ID: ${result.insertId}`);
-// 		});
-// 	});
-
-// 	// Изменение данных пользователя
-// 	app.put("/users/:id", (req, res) => {
-// 		const id = req.params.id;
-
-// 		pool.query(
-// 			"UPDATE users SET ? WHERE id = ?",
-// 			[req.body, id],
-// 			(error, result) => {
-// 				if (error) throw error;
-
-// 				res.json("User update successfully.");
-// 			}
-// 		);
-// 	});
-
-// 	// Удаление пользователя
-// 	app.delete("/users/:id", (req, res) => {
-// 		const id = req.params.id;
-
-// 		pool.query("DELETE FROM users WHERE id = ?", id, (error, result) => {
-// 			if (error) throw error;
-
-// 			res.json("User deleted.");
-// 		});
-// 	});
-// };
-
-// // Экспорт router
-// module.exports = router;
-
-
 const Router = require("express").Router;
 const userController = require("../controllers/user-controller");
 const router = new Router();
@@ -88,6 +6,7 @@ const router = new Router();
 const { body } = require("express-validator"); 
 const authMiddlewares = require("../middlewares/auth-middlewares"); 
 const exchangeController = require("../controllers/exchange-controller");
+const settingsControlller = require("../controllers/settings-controlller");
 
 // Роутинги пользователя
 router.post(
@@ -107,5 +26,8 @@ router.get("/standardbundles", exchangeController.getStandardBundles);
 router.get("/conversionbundles", exchangeController.getConversionBundles);
 router.get("/interexchangebundles", exchangeController.getInterexchangeBundles);
 router.get("/exchangedata/:dataType", exchangeController.getExchangeData);
+
+// Роутинг получения настроек поиска
+router.get("/settings", settingsControlller.getSettings);
 
 module.exports = router;
