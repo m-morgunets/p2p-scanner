@@ -9,7 +9,7 @@ const UserDto = require("../dtos/user-dots");
 const ApiError = require("../exceptions/api-error");
 
 class UserService {
-	async registration(email, password) {
+	async registration(name, email, password) {
 
 		// Отправка запроса на получение данных пользователя по email
 		const [checkingUser] = await userdb.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
@@ -27,9 +27,9 @@ class UserService {
 		// Создание ссылки для активации почты
 		const activationLink = uuid.v4();
 		// Создаём нового пользователя в БД
-		await userdb.query('INSERT INTO users(email, password, activationEmailLink) VALUES (?)', [[email, hashPassword, activationLink]]).catch(err => {throw err});
+		await userdb.query('INSERT INTO users(name, email, password, activationEmailLink) VALUES (?)', [[name, email, hashPassword, activationLink]]).catch(err => {throw err});
 
-		// Функция отправки письма активации
+		// // Функция отправки письма активации
 		await mailService.sendActivationEmail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
 		// Отправка запроса на получение данных пользователя по email

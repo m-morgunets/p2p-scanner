@@ -1,4 +1,4 @@
-import { bundlesAction } from "./bundles.slice";
+import { bundlesActions } from "./bundles.slice";
 import { IBundles } from "./../../types/bundles";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -12,16 +12,16 @@ interface bundlesParams {
 export const bundlesApi = createApi({
 	reducerPath: "exchange/api",
 	baseQuery: fetchBaseQuery({
-		baseUrl: "",
+		baseUrl: "http://localhost:5000/api/",
 		method: "get",
-		mode: "no-cors", // Параметр чтобы делать запросы на локальный сервер
 	}),
 	endpoints: (build) => ({
 		// Получение стандартных связок
 		getStandardBundles: build.mutation<IBundles[], bundlesParams>({
 			query: (params: bundlesParams) => ({
-				url: `bundles/${params.exchanges}`,
+				url: 'standardbundles',
 				params: {
+					exchanges: params.exchanges,
 					sum: params.sum,
 					payTypes: params.payTypes,
 					assets: params.assets,
@@ -32,7 +32,7 @@ export const bundlesApi = createApi({
 				{ dispatch, queryFulfilled }
 			) {
 				const { data } = await queryFulfilled;
-				dispatch(bundlesAction.setBundles(data));
+				dispatch(bundlesActions.setBundles(data));
 			},
 		}),
 
@@ -52,14 +52,14 @@ export const bundlesApi = createApi({
 				{ dispatch, queryFulfilled }
 			) {
 				const { data } = await queryFulfilled;
-				dispatch(bundlesAction.setBundles(data));
+				dispatch(bundlesActions.setBundles(data));
 			},
 		}),
 
 		// Получение межбиржевых связок
 		getInterexchangeBundles: build.mutation<IBundles[], bundlesParams>({
 			query: (params: bundlesParams) => ({
-				url: "interexchange",
+				url: "interexchangebundles",
 				params: {
 					exchanges: params.exchanges,
 					sum: params.sum,
@@ -72,7 +72,7 @@ export const bundlesApi = createApi({
 				{ dispatch, queryFulfilled }
 			) {
 				const { data } = await queryFulfilled;
-				dispatch(bundlesAction.setBundles(data));
+				dispatch(bundlesActions.setBundles(data));
 			},
 		}),
 
@@ -86,8 +86,6 @@ export const bundlesApi = createApi({
 });
 
 export const {
-	// useGetBundlesQuery,
-	// useLazyGetBundlesQuery,
 	useGetStandardBundlesMutation,
 	useGetConversionBundlesMutation,
 	useGetInterexchangeBundlesMutation,

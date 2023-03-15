@@ -5,10 +5,10 @@ class ExchangeController {
 	async getStandardBundles(req, res, next) {
 		try {
 			// Получение данных из тела запроса
-			const { sum, payTypes, exchange, assets } = req.body;
+			const { sum, payTypes, exchanges, assets } = req.query;
 
 			// Функция поулчения связок
-			const standardBundles = await exchangeService.getStandardBundles(sum, exchange, payTypes, assets);
+			const standardBundles = await exchangeService.getStandardBundles(sum, exchanges, payTypes, assets);
 			res.json(standardBundles); // Отправка данных на клиент
 		} catch (e) {
 			next(e);
@@ -19,10 +19,10 @@ class ExchangeController {
 	async getConversionBundles(req, res, next) {
 		try {
 			// Получение данных из тела запроса
-			const { sum, payTypes, exchange, assets } = req.body;
+			const { sum, payTypes, exchanges, assets } = req.query;
 
 			// Функция поулчения связок
-			const conversionBundles = await exchangeService.getConversionBundles(sum, exchange, payTypes, assets);
+			const conversionBundles = await exchangeService.getConversionBundles(sum, exchanges, payTypes, assets);
 			res.json(conversionBundles); // Отправка данных на клиент
 		} catch (e) {
 			next(e);
@@ -33,10 +33,10 @@ class ExchangeController {
 	async getInterexchangeBundles(req, res, next) {
 		try {
 			// Получение данных из тела запроса
-			const { sum, payTypes, exchange, assets } = req.body;
+			const { sum, payTypes, exchanges, assets } = req.query;
 
 			// Функция поулчения связок
-			const interexchangeBundles = await exchangeService.getInterexchangeBundles(sum, exchange, payTypes, assets);
+			const interexchangeBundles = await exchangeService.getInterexchangeBundles(sum, exchanges, payTypes, assets);
 			res.json(interexchangeBundles); // Отправка данных на клиент
 		} catch (e) {
 			next(e);

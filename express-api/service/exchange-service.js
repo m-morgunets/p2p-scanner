@@ -2,7 +2,14 @@ const connectDataBase = require("../data/config_db");
 
 class ExchangeService {
 	// Функция создания текста запроса и задания параметров
-	static setRequestData(sum, exchange, payTypes, assets) {
+	static setRequestData(sum, exchanges, payTypes, assets) {
+
+		// Перевод строк с данными в массивы
+		let exchangesArray = exchanges.split(",");
+		let payTypesArray = payTypes.split(",");
+		let assetsArray = assets.split(",");
+
+
 		// Задание начала запроса
 		let query = "SELECT * FROM bundles_?";
 		// Задание пустого массива для внесения частей запроса
@@ -11,11 +18,11 @@ class ExchangeService {
 		let value = [Number(sum)];
 
 		// Если массив с данными бирж не пустой, то включить его в запрос
-		if (exchange.length !== 0) {
+		if (exchanges.length !== 0) {
 			// Добавление строки запроса
 			queryParams.push("exchange_buy IN (?) && exchange_sell IN (?)");
 			// Добавление данных запроса
-			value.push(exchange, exchange);
+			value.push(exchangesArray, exchangesArray);
 		}
 
 		// Если массив с данными платёжных систем не пустой, то включить его в запрос
@@ -23,7 +30,7 @@ class ExchangeService {
 			// Добавление строки запроса
 			queryParams.push("payTypes_buy IN (?) && payTypes_sell IN (?)");
 			// Добавление данных запроса
-			value.push(payTypes, payTypes);
+			value.push(payTypesArray, payTypesArray);
 		}
 
 		// Если массив с данными криптовалют не пустой, то включить его в запрос
@@ -31,7 +38,7 @@ class ExchangeService {
 			// Добавление строки запроса
 			queryParams.push("asset_buy IN (?) && asset_sell IN (?)");
 			// Добавление данных запроса
-			value.push(assets, assets);
+			value.push(assetsArray, assetsArray);
 		}
 
 		// Если массив с частями запроса не пустой, то добавить его в основную строку запроса
@@ -49,10 +56,10 @@ class ExchangeService {
 	}
 
 	// Функция получение стандартных связок
-	async getStandardBundles(sum, exchange, payTypes, assets) {
-		const { query, value } = ExchangeService.setRequestData(sum, exchange, payTypes, assets);
+	async getStandardBundles(sum, exchanges, payTypes, assets) {
+		const { query, value } = ExchangeService.setRequestData(sum, exchanges, payTypes, assets);
 
-		switch (exchange[0]) {
+		switch (exchanges) {
 			// Запрос а базе данных со связками Binance
 			case "binance":
 				const dataBinance = await connectDataBase('binancebundles').query(query, value).catch(err => {throw err});
@@ -75,16 +82,16 @@ class ExchangeService {
 	}
 
   // Получение конвертационных связок
-  async getConversionBundles(sum, exchange, payTypes, assets) {
-		const { query, value } = ExchangeService.setRequestData(sum, exchange, payTypes, assets);
+  async getConversionBundles(sum, exchanges, payTypes, assets) {
+		const { query, value } = ExchangeService.setRequestData(sum, exchanges, payTypes, assets);
     
     const data = await connectDataBase('conversionbundles').query(query, value).catch(err => {throw err});
     return data;
   }
 
   // Получение межбиржевых связок
-  async getInterexchangeBundles(sum, exchange, payTypes, assets) {
-		const { query, value } = ExchangeService.setRequestData(sum, exchange, payTypes, assets);
+  async getInterexchangeBundles(sum, exchanges, payTypes, assets) {
+		const { query, value } = ExchangeService.setRequestData(sum, exchanges, payTypes, assets);
 
     const data = await connectDataBase('interexchange').query(query, value).catch(err => {throw err});
     return data;

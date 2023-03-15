@@ -8,3 +8,10 @@ export interface IUser {
 	lastPayDate: Date | null;
 	nextPayDate: Date | null;
 }
+
+
+export interface IRespUser {
+	accessToken: string;
+	refreshToken: string;
+	user: IUser;
+}

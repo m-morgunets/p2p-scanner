@@ -1,5 +1,5 @@
-import { bundlesAction } from './../store/bundles/bundles.slice';
-import { settingsAction } from './../store/settings/settings.slice';
+import { bundlesActions } from './../store/bundles/bundles.slice';
+import { settingsActions } from './../store/settings/settings.slice';
 import { userActions } from "./../store/user/user.slice";
 import { bindActionCreators } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
@@ -7,8 +7,8 @@ import { useDispatch } from "react-redux";
 // Тут храняться все экшены из githubSlice
 const actions = {
 	...userActions,
-	...settingsAction,
-	...bundlesAction
+	...settingsActions,
+	...bundlesActions
 };
 
 // Хук сделан для того, чтобы не делать каждый раз обёртку dispatch(action)

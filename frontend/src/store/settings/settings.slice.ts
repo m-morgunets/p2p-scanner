@@ -76,15 +76,15 @@ const initialState: IInitialState = {
 
 // Создание асинхронной операции
 export const getSettingsInfo = createAsyncThunk(
-	"settings/getInfoBundles",
+	"settings/getSettingsInfo",
 
 	// Получает один параметр
 	// dispath получается из параметра thunkAPI
 	async (parameters: void, { dispatch }) => {
-		await axios({ method: "get", url: `/settings` })
+		await axios({ method: "get", url: `http://localhost:5000/api/settings` })
 			.then((response) => {
 				// Используется reducer "setSettings"
-				dispatch(settingsAction.setSettings(response.data));
+				dispatch(settingsActions.setSettings(response.data));
 			})
 			// Перехват ошибок
 			.catch((error) => {
@@ -206,6 +206,6 @@ const settingsSlice = createSlice({
 });
 
 // export const { setSettings } = settingsSlice.actions;
-export const settingsAction = settingsSlice.actions;
+export const settingsActions = settingsSlice.actions;
 
 export default settingsSlice.reducer;

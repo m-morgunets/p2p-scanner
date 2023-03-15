@@ -4,7 +4,7 @@ import avatarImg from "./../../../assets/images/avatar.jpg";
 
 const User = () => {
 	const { registrationDate, name, email, access, nextPayDate, subscription } =
-		useAppSelector((store) => store.user);
+		useAppSelector((store) => store.user.userData);
 
 	return (
 		<section className={s.section}>

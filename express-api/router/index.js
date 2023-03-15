@@ -8,7 +8,7 @@ const authMiddlewares = require("../middlewares/auth-middlewares");
 const exchangeController = require("../controllers/exchange-controller");
 const settingsControlller = require("../controllers/settings-controlller");
 
-// Роутинги пользователя
+// Роутеры работы с пользователем
 router.post(
 	"/registration",
 	body("email").isEmail(), // Проверка email
@@ -21,13 +21,13 @@ router.get("/activate/:link", userController.activate);
 router.get("/refresh", userController.refresh);
 router.get("/users", authMiddlewares, userController.getUsers);
 
-// Роутинги полчения связок
+// Роутеры получения связок
 router.get("/standardbundles", exchangeController.getStandardBundles);
 router.get("/conversionbundles", exchangeController.getConversionBundles);
 router.get("/interexchangebundles", exchangeController.getInterexchangeBundles);
 router.get("/exchangedata/:dataType", exchangeController.getExchangeData);
 
-// Роутинг получения настроек для сортирвоки связок
+// Роутеры получения настроек для сортирвоки связок
 router.get("/settings", settingsControlller.getSettings);
 
 module.exports = router;

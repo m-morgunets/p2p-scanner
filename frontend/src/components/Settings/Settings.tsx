@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useActions } from "../../hooks/useActions";
 import { useAppSelector } from "../../hooks/useAppSelector";
 import { store } from "../../store";
@@ -22,7 +22,6 @@ const Settings = () => {
 		toggleCheck,
 		setActiveMode,
 		setSum,
-		setActiveSettingsInfo,
 		setSumToRequest,
 	} = useActions();
 

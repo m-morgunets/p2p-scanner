@@ -10,6 +10,8 @@ const Exchangedata = () => {
 		isError,
 		data: currenciesData,
 	} = useGetExchangedataQuery("currenciesdata");
+	console.log(currenciesData);
+	
 
 	return (
 		<section className={styles.section}>

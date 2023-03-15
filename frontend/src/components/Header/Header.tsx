@@ -6,7 +6,7 @@ import HeaderLink from "./HeaderLink/HeaderLink";
 import avatarImg from "./../../assets/images/avatar.jpg";
 
 const Header = () => {
-	const { name } = useAppSelector((store) => store.user);
+	const { name } = useAppSelector((store) => store.user.userData);
 	const { activeMode, modes } = useAppSelector((store) => store.settings);
 
 	return (

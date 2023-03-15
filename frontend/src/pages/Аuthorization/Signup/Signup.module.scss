@@ -1,0 +1,26 @@
+.success__msg {
+	font-size: 18px;
+	border: 1px solid #fff;
+	display: block;
+	padding: 15px;
+	max-width: 425px;
+	margin: 35px auto 0;
+	opacity: 0.5;
+}
+.subtitle {
+	right: unset;
+	left: 40px;
+}
+.box:last-child {
+	padding: 60px 0 90px;
+}
+.btn__signature {
+	position: absolute;
+	bottom: 80px;
+	right: 45px;
+	font-size: 10px;
+	line-height: 15px;
+	opacity: 0.5;
+	width: 140px;
+	text-align: left;
+}

@@ -6,7 +6,7 @@ const Subscription = () => {
 
 	// Получение данных из стора
 	const { access, nextPayDate, lastPayDate, subscription } = useAppSelector(
-		(store) => store.user
+		(store) => store.user.userData
 	);
 
 	return (

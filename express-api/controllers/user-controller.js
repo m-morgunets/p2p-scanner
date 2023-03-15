@@ -14,9 +14,9 @@ class UserController {
 			}
 
 			// Получение данных из тела запроса
-			const { email, password } = req.body;
+			const { name, email, password,  } = req.body;
 			// Вызов функции регистрации
-			const userData = await userService.registration(email, password);
+			const userData = await userService.registration(name, email, password);
 			// Отправка refreshToken-а в куки
 			res.cookie("refreshToken", userData.refreshToken, {
 				maxAge: 30 * 24 * 60 * 60 * 1000, // Кука живёт 30 дней

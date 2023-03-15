@@ -2,6 +2,12 @@
 	visibility: visible;
 }
 
+
+
+:global(body.no-header) .header{
+  visibility: hidden;
+}
+
 .header {
 	width: 100%;
 	position: fixed;

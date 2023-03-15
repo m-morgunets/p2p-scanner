@@ -79,11 +79,11 @@ const Scanner = () => {
 	// Вызов фукнции при изменении настроек
 	useEffect(() => {
 		getBundles();
-		const handler = setInterval(() => {
-			getBundles();
-		}, 10000);
+		// const handler = setInterval(() => {
+		// 	getBundles();
+		// }, 10000);
 
-		return () => clearInterval(handler);
+		// return () => clearInterval(handler);
 	}, [
 		activeMode,
 		activeSettingsInfo,

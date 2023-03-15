@@ -8,7 +8,7 @@ import PaySub from "./PaySub/PaySub";
 import Partner from "./Partner/Partner";
 
 const Profile = () => {
-	const { access } = useAppSelector((store) => store.user);
+	const { access } = useAppSelector((store) => store.user.userData);
 
 	return (
 		<div className={styles.profile}>
