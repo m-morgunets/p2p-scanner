@@ -14,13 +14,18 @@ const Login = (props) => {
 			document.body.classList.remove("no-header");
 		};
 	});
+
+	// Получение данных из store
 	const { email, password } = useAppSelector(
 		(store) => store.user.authorization
 	);
+	// Получение функций для сохранения данных формы в store 
 	const { setAuthEmail, setAuthPassword } = useActions();
 
+	// Получение функции авторизации
 	const [login, { isError, isLoading }] = useLoginMutation();
 	
+	// Функция, используется при отправке формы
 	const submitForm = async (e) => {
 		e.preventDefault();
 		const data = await login({ email, password });
@@ -35,6 +40,7 @@ const Login = (props) => {
 					</Link>
 					<div className={styles.title}>p2p_scanner</div>
 				</div>
+				{/* Форма авторизации */}
 				<form onSubmit={(e) => submitForm(e)} className={styles.box}>
 					<input
 						name="email"

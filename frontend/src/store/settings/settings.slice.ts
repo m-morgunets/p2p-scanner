@@ -1,28 +1,8 @@
-import { IRespInfoBundles } from "../../types/settings";
+import { IModeItem, IRespInfoBundles, ISettingsInfoItem, typeMode } from "../../types/settings";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export type typeMode = "standard" | "conversion" | "interexchange";
-
-export interface IModeItem {
-	typeExchange: "radio" | "checkbox";
-	activeExchange: string[];
-	exchanges: string[];
-	currentData: Array<{
-		exchange: string;
-		payTypes: string[];
-		assets: string[];
-	}>;
-	sum: string;
-	sumToRequest: string;
-}
-
-// Тип отдельного объекта в стейте
-interface ISettingsInfoItem {
-	payTypes: string[];
-	assets: string[];
-}
-
+// Интерфейс всего стейта
 interface IInitialState {
 	settingsInfo: Record<string, ISettingsInfoItem>;
 	activeSettingsInfo: string;
@@ -78,9 +58,9 @@ const initialState: IInitialState = {
 export const getSettingsInfo = createAsyncThunk(
 	"settings/getSettingsInfo",
 
-	// Получает один параметр
 	// dispath получается из параметра thunkAPI
 	async (parameters: void, { dispatch }) => {
+		// Запрос для получения настроек
 		await axios({ method: "get", url: `http://localhost:5000/api/settings` })
 			.then((response) => {
 				// Используется reducer "setSettings"
@@ -102,9 +82,10 @@ const settingsSlice = createSlice({
 	name: "settings",
 	initialState,
 	reducers: {
-		// reducer заносит данные о настройках, полученные с помощью асинхронной операции getInfoBundles
+
+		// Заносит данные о настройках, полученные с помощью асинхронной операции getInfoBundles
 		setSettings: (state, action: PayloadAction<IRespInfoBundles[]>) => {
-			// занесение данных в стейт по ключу "action.payload.exchange" из пришедших данных
+			// Занесение данных в стейт по ключу "action.payload.exchange" из пришедших данных
 			action.payload.forEach((item) => {
 				state.settingsInfo[item.exchange] = {
 					payTypes: item.payTypes.split(", "), // Преобразование в массив
@@ -121,66 +102,99 @@ const settingsSlice = createSlice({
 		) => {
 			const { mode, value } = action.payload;
 
+			// Проверка какой режим работы сканера выборан
+			// Условие выдаст true, если в режиме работы сканера доступен выбор только одной биржи
 			if (state[mode].typeExchange === "radio") {
+				// Занесение данных о биржи в сейт
 				state[mode].activeExchange = [value];
 			} else {
+				// Проверка существует ли такая биржа в массиве
 				if (state[mode].activeExchange.includes(value)) {
+					// Если существует, то удаляется с помощью фильтра
 					state[mode].activeExchange = state[mode].activeExchange.filter(
 						(e) => e !== value
 					);
 				} else {
+					// Если нет, то добавляется в массив
 					state[mode].activeExchange.push(value);
 				}
 			}
 		},
 
 		// Функция устанавливающее значение activeSettingsInfo
-		setActiveSettingsInfo: (state, action: PayloadAction<typeMode>) => {
-			const stateByMode = state[action.payload];
+		// activeSettingsInfo - название активной биржи для получения настроек, которые пришли из api
+		setActiveSettingsInfo: (state, action: PayloadAction<void>) => {
+
+			// Получение стейта текущего режима работы сканера
+			const stateByMode = state[state.activeMode];
+
+			// Проверка какой режим работы сканера выборан
+			// Условие выдаст true, если в режиме работы сканера доступен выбор только одной биржи
+			// Занесение данных отличается из-за первоначальной архитектуры данных в стейте
 			if (stateByMode.typeExchange === "radio") {
+				// Занесение данных в стейт
 				state.activeSettingsInfo = stateByMode.activeExchange[0];
 			} else {
+				// Занесение данных в стейт
 				state.activeSettingsInfo = stateByMode.currentData[0].exchange;
 			}
 		},
 
-		// НАПИСАТЬ КОММЕНТАРИИ
+		// Переключене checkbox-кнопок в настройках
 		toggleCheck: (state, action: PayloadAction<IToggleCheckParams>) => {
 			const { type, value } = action.payload;
+
+			// Получение объекта данных о текущих настройках у текущего режима работы сканера
 			const currentData = state[state.activeMode].currentData;
 
+			// Перебор данных
 			currentData.find((item) => {
+				// Поиск объекта выбранной биржи
 				if (item.exchange === state.activeSettingsInfo) {
+					// Проверка существует ли такая биржа в массиве
 					if (item[type].includes(value)) {
+						// Если существует, то удаляется с помощью фильтра
 						item[type] = item[type].filter((e) => e !== value);
 					} else {
+						// Если нет, то добавляется в массив
 						item[type].push(value);
 					}
 				}
 			});
 		},
 
-		// Задание активного режима
+		// Задание активного режима работы сканера
 		setActiveMode: (state, action: PayloadAction<typeMode>) => {
 			state.activeMode = action.payload;
 		},
 
 		// Вынесение в отдельный объект данных с текущими настройками
 		setActiveCurrentData: (state, action: PayloadAction<void>) => {
-			state[state.activeMode].currentData.find((item) => {
+			// Получение объекта данных о текущих настройках у текущего режима работы сканера
+			const currentData = state[state.activeMode].currentData;
+
+			// Перебор данных
+			currentData.find((item) => {
+				// Поиск объекта выбранной биржи
 				if (item.exchange === state.activeSettingsInfo)
+					// Задание данных в объект текущих активных настроек выводимых на экран 
 					state.activeCurrentData = {
 						assets: item.assets,
 						payTypes: item.payTypes,
 					};
 			});
 		},
+
 		// Внесение информации о введённой сумме
 		setSum: (state, action: PayloadAction<string>) => {
 			const value = Number(action.payload);
 
+			// Проверка является ли числом
 			if (!isNaN(value)) {
+				// Запрет на ввод числа больше указаного
 				if (value <= 300000) {
+					// Внесение данных о сумме в объект текущего режима работы сканера
+					// Также строка очищается от пробелов и лишних символов с помощью регулярных выражений
 					state[state.activeMode].sum = String(value)
 						.replace(/ /g, "")
 						.replace(/^0+/, "");
@@ -191,15 +205,18 @@ const settingsSlice = createSlice({
 		// Преобрезование суммы к нормальному виду
 		// Значение заносится в основную переменную суммы и в переменную для запросов к API
 		setSumToRequest: (state, action: PayloadAction<void>) => {
-			const currentData = state[state.activeMode];
 
-			if (Number(currentData.sum) < 10000 || currentData.sum === "") {
-				currentData.sum = "5000";
-				currentData.sumToRequest = "5000";
+			// Получение стейта текущего режима работы сканера
+			const stateByMode = state[state.activeMode];
+
+			// Преобразование числа к нужному виду
+			if (Number(stateByMode.sum) < 10000 || stateByMode.sum === "") {
+				stateByMode.sum = "5000";
+				stateByMode.sumToRequest = "5000";
 			} else {
-				let sum = currentData.sum.slice(0, -4) + "0000";
-				currentData.sum = sum;
-				currentData.sumToRequest = sum;
+				let sum = stateByMode.sum.slice(0, -4) + "0000";
+				stateByMode.sum = sum;
+				stateByMode.sumToRequest = sum;
 			}
 		},
 	},

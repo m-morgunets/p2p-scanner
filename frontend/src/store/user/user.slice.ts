@@ -1,6 +1,7 @@
 import { IRespUser, IUser } from "./../../types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// Интерфейс данных пользователя
 interface User {
 	id: number;
 	subscription: "standart" | "pro" | "business" | null;
@@ -12,6 +13,7 @@ interface User {
 	access: boolean;
 }
 
+// Интерфейс данных использующихся при авторизации/регистрации
 interface Authorization {
 	name: string;
 	email: string;
@@ -22,18 +24,17 @@ interface Authorization {
 interface IInitialState {
 	userData: User;
 	authorization: Authorization;
-	accessToken: string;
 }
 
 const initialState: IInitialState = {
 	userData: {
 		id: 0,
 		subscription: null,
-		lastPayDate: "",
-		nextPayDate: "",
-		registrationDate: "",
-		name: "name",
-		email: "name@gmail.com",
+		lastPayDate: "-",
+		nextPayDate: "-",
+		registrationDate: "-",
+		name: "-",
+		email: "-",
 		access: false,
 	},
 	authorization: {
@@ -41,7 +42,6 @@ const initialState: IInitialState = {
 		email: "",
 		password: "",
 	},
-	accessToken: "",
 };
 
 // Функция для преобразования дат из базы данных в нужный вид
@@ -56,12 +56,13 @@ const userSlice = createSlice({
 	initialState,
 	reducers: {
 		// Задание данных пользователя
-		setUser: (state, action: PayloadAction<IRespUser>) => {
-			const {accessToken, user} = action.payload;
-			
-			localStorage.setItem('token', accessToken);
-			state.accessToken = accessToken;
+		setUserData: (state, action: PayloadAction<IRespUser>) => {
+			const { accessToken, user } = action.payload;
 
+			// Добавление access токена в localStorage
+			localStorage.setItem("token", accessToken);
+
+			// Добавление данных в стейт
 			state.userData = {
 				...state.userData,
 				id: user.id,
@@ -72,6 +73,15 @@ const userSlice = createSlice({
 				name: user.name,
 				email: user.email,
 				access: user.access,
+			};
+		},
+
+		clearUserData: (state, action: PayloadAction<void>) => {
+			// Удаление access токена из localStorage
+			localStorage.removeItem("token");
+			// Очистка данных о пользователе
+			state.userData = {
+				...initialState.userData,
 			};
 		},
 
@@ -87,25 +97,10 @@ const userSlice = createSlice({
 		setAuthPassword: (state, action: PayloadAction<string>) => {
 			state.authorization.password = action.payload;
 		},
-
-		tokenReceived: (state, action: PayloadAction<any>) => {
-			state.accessToken = action.payload.accessToken;
-			localStorage.setItem("token", action.payload.accessToken);
-		},
-
-		// checkAuth: (state, action: PayloadAction<IRespUser>)=> {
-		// 	const {accessToken, refreshToken, user} = action.payload;
-		// 	console.log(action.payload);
-
-		// 	// const response = await axios.get<AuthResponse>(`${API_URL}/refresh`, {withCredentials: true})
-		// 	localStorage.setItem('token', accessToken);
-		// 	state.accessToken = accessToken;
-			
-		// }
 	},
 });
 
-export const { tokenReceived, setUser } = userSlice.actions;
+export const { setUserData, clearUserData } = userSlice.actions;
 export const userActions = userSlice.actions;
 
 export default userSlice.reducer;

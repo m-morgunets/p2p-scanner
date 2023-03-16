@@ -16,13 +16,17 @@ const Signup = (props) => {
 		};
 	});
 
+	// Получение данных из store
 	const { name, email, password } = useAppSelector(
 		(store) => store.user.authorization
 	);
+	// Получение функций для сохранения данных формы в store
 	const { setAuthName, setAuthEmail, setAuthPassword } = useActions();
 
+	// Получение функции регистрации
 	const [signup, { isError, isLoading }] = useSignupMutation();
 
+	// Функция, используется при отправке формы
 	const submitForm = (e) => {
 		e.preventDefault();
 		signup({ name, email, password });
@@ -40,6 +44,7 @@ const Signup = (props) => {
 					</Link>
 					<div className={stylesAuth.title}>p2p_scanner</div>
 				</div>
+				{/* Форма регистрации */}
 				<form
 					onSubmit={(e) => submitForm(e)}
 					className={`${stylesAuth.box} ${styles.box}`}

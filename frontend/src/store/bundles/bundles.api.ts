@@ -1,7 +1,8 @@
-import { bundlesActions } from "./bundles.slice";
+import { setBundles } from "./bundles.slice";
 import { IBundles } from "./../../types/bundles";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+// Интерфейс параметров при запросе связок
 interface bundlesParams {
 	exchanges: String[];
 	sum: String;
@@ -11,6 +12,7 @@ interface bundlesParams {
 
 export const bundlesApi = createApi({
 	reducerPath: "exchange/api",
+	// Задание базовых данных запроса
 	baseQuery: fetchBaseQuery({
 		baseUrl: "http://localhost:5000/api/",
 		method: "get",
@@ -19,20 +21,14 @@ export const bundlesApi = createApi({
 		// Получение стандартных связок
 		getStandardBundles: build.mutation<IBundles[], bundlesParams>({
 			query: (params: bundlesParams) => ({
-				url: 'standardbundles',
-				params: {
-					exchanges: params.exchanges,
-					sum: params.sum,
-					payTypes: params.payTypes,
-					assets: params.assets,
-				},
+				url: "standardbundles",
+				params,
 			}),
-			async onQueryStarted(
-				params: bundlesParams,
-				{ dispatch, queryFulfilled }
-			) {
+			async onQueryStarted(params, { dispatch, queryFulfilled }) {
+				// Получение данных по окончанию запроса
 				const { data } = await queryFulfilled;
-				dispatch(bundlesActions.setBundles(data));
+				// Добавление связок в стейт
+				dispatch(setBundles(data));
 			},
 		}),
 
@@ -40,19 +36,13 @@ export const bundlesApi = createApi({
 		getConversionBundles: build.mutation<IBundles[], bundlesParams>({
 			query: (params: bundlesParams) => ({
 				url: `conversionbundles`,
-				params: {
-					exchanges: params.exchanges,
-					sum: params.sum,
-					payTypes: params.payTypes,
-					assets: params.assets,
-				},
+				params,
 			}),
-			async onQueryStarted(
-				params: bundlesParams,
-				{ dispatch, queryFulfilled }
-			) {
+			async onQueryStarted(params, { dispatch, queryFulfilled }) {
+				// Получение данных по окончанию запроса
 				const { data } = await queryFulfilled;
-				dispatch(bundlesActions.setBundles(data));
+				// Добавление связок в стейт
+				dispatch(setBundles(data));
 			},
 		}),
 
@@ -60,19 +50,13 @@ export const bundlesApi = createApi({
 		getInterexchangeBundles: build.mutation<IBundles[], bundlesParams>({
 			query: (params: bundlesParams) => ({
 				url: "interexchangebundles",
-				params: {
-					exchanges: params.exchanges,
-					sum: params.sum,
-					payTypes: params.payTypes,
-					assets: params.assets,
-				},
+				params,
 			}),
-			async onQueryStarted(
-				params: bundlesParams,
-				{ dispatch, queryFulfilled }
-			) {
+			async onQueryStarted(params, { dispatch, queryFulfilled }) {
+				// Получение данных по окончанию запроса
 				const { data } = await queryFulfilled;
-				dispatch(bundlesActions.setBundles(data));
+				// Добавление связок в стейт
+				dispatch(setBundles(data));
 			},
 		}),
 

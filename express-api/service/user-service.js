@@ -130,7 +130,7 @@ class UserService {
 
 	// Функция получение списка всех пользователей
 	async getAllUsers() {
-		const [users] = await userdb.query('SELECT * FROM users').catch(err => {throw err});
+		const users = await userdb.query('SELECT * FROM users').catch(err => {throw err});
 		return users;
 	}
 }

@@ -1,6 +1,7 @@
 import { IBundles } from "./../../types/bundles";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// Интерфейс стейта
 interface IInitialState {
 	bundles: IBundles[];
 }
@@ -15,13 +16,14 @@ const bundlesSlice = createSlice({
 	reducers: {
 		// Занесение данных о связках в стейт
 		setBundles: (state, action: PayloadAction<IBundles[] | undefined>) => {
-			const value = action.payload;
-			if (value !== undefined) state.bundles = value;
+			const data = action.payload;
+			// Проверка, что пришедшие данных не undefined
+			if (data !== undefined) state.bundles = data;
 		},
 	},
 });
 
-// export const {} = bundlesSlice.actions;
+export const { setBundles } = bundlesSlice.actions;
 export const bundlesActions = bundlesSlice.actions;
 
 export default bundlesSlice.reducer;

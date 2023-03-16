@@ -51,6 +51,10 @@ class UserController {
 		try {
 			// Получение refreshToken-а из куков
 			const {refreshToken} = req.cookies;
+			
+			// Проверка на пустой токен
+			if(refreshToken === undefined) throw ApiError.BadRequest("Пришло пустое значение токена");
+
 			// Вызов функции выхода из аккаунта
 			const token = await userService.logout(refreshToken);
 			// Удаление куки

@@ -18,37 +18,23 @@ import {
 
 function App() {
 
-	const { accessToken } = useAppSelector((store) => store.user);
-	const { setUser } = useActions();
-
-	const [getUsers] = useGetUsersMutation();
-	const [refreshToken] = useRefreshMutation(); 
-
-	useEffect(() => {
-		const fatchData = async () => {
-			await refreshToken();
-			// await getUsers(accessToken);
-		}
-		fatchData()
-	}, []);
-
-	// const [signup, { isError, isLoading }] = useSignupMutation();
+	// TESTS
+	// const [getUsers] = useGetUsersMutation();
+	// const [refreshToken] = useRefreshMutation(); 
 	// useEffect(() => {
-	// 	signup({
-	// 		email: "misha1237711@yandex.ru",
-	// 		password: "mm0214123771",
-	// 	});
+		// const fatchData = async () => {
+		// 	await refreshToken();
+		// 	await getUsers();
+		// }
+		// fatchData()
 	// }, []);
 
-	// const { isLoading, isError, data: user } = useGetUserQuery(2);
-	// const { setUser } = useActions();
-	// useEffect(() => {
-	// 	if (user !== undefined) {
-	// 		setUser(user);
-	// 	} else{
-	// 		console.error("С сервера не пришли данные о пользователе!");
-	// 	}
-	// }, [user]);
+
+	// Функция для создания новых токенов и поулчение актуальных данных
+	const [refreshToken] = useRefreshMutation(); 
+	useEffect(() => {
+		refreshToken();
+	}, []);
 
 	return (
 		<>

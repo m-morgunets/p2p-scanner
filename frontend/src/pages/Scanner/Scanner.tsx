@@ -34,7 +34,7 @@ const Scanner = () => {
 
 	// При изменении режима или биржи задаётся другое название активных настроек
 	useEffect(() => {
-		setActiveSettingsInfo(activeMode);
+		setActiveSettingsInfo();
 	}, [activeMode, settings.activeExchange]);
 
 	// В отдельный объект выносятся данные о текущих настройках

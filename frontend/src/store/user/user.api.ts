@@ -1,5 +1,5 @@
 import { Mutex } from "async-mutex";
-import { setUser, tokenReceived } from "./user.slice";
+import { clearUserData, setUserData } from "./user.slice";
 import { IRespUser, IUser } from "./../../types/user";
 
 import {
@@ -11,55 +11,76 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../index";
 
+// Параметры регистрации
 interface registrationParams {
 	name: string;
 	email: string;
 	password: string;
 }
-
+// Параметры авторизации
 interface authorizationParams {
 	email: string;
 	password: string;
 }
 
+// Создаем новый мьютекс
 const mutex = new Mutex();
+// Задание базовых данных запроса
 const baseQuery = fetchBaseQuery({
 	baseUrl: "http://localhost:5000/api/",
-	credentials: "include",
+	credentials: "include", // Присоединение данных авторизации (refreshToken)
+	// prepareHeaders генерирует заголовки при каждом запросе
 	prepareHeaders: (headers, { getState }) => {
-		const token = (getState() as RootState).user.accessToken;
-		if (token) {
-			headers.set("authorization", `Bearer ${token}`);
-		}
+		// Добавление заголовка с access токеном
+		headers.set("authorization", `Bearer ${localStorage.getItem("token")}`);
 		return headers;
 	},
 });
+// Создание функции выполняющейся при каждом запросе
 const baseQueryWithReauth: BaseQueryFn<
 	string | FetchArgs,
 	unknown,
 	FetchBaseQueryError
 > = async (args, api, extraOptions) => {
+	// Ожидание, пока мьютекс станет доступным
 	await mutex.waitForUnlock();
+
+	// Выполнение изначального запроса
 	let result = await baseQuery(args, api, extraOptions);
 	if (result.error && result.error.status === 401) {
+		// Проверка, заблокирован ли мьютекс
 		if (!mutex.isLocked()) {
+			// Блокировка мьютекса
 			const release = await mutex.acquire();
 			try {
+				// Запрос на обновление токенов
 				const refreshResult = await baseQuery("/refresh", api, extraOptions);
 				if (refreshResult.data) {
-					api.dispatch(tokenReceived(refreshResult.data));
-					// retry the initial query
+					// Получение токена из пришедших данных
+					const token = (refreshResult.data as IRespUser).accessToken;
+					// Занесение токена в localStorage
+					localStorage.setItem("token", token);
+					// Повторение изначального запроса
 					result = await baseQuery(args, api, extraOptions);
 				} else {
-					// api.dispatch(loggedOut())
+					// Выполняется запрос "logout" из объекта userApi
+					api.dispatch(userApi.endpoints.logout.initiate());
+
+					// await baseQuery({
+					// 	url: "logout",
+					// 	method: "post"
+					// }, api, extraOptions)
+					// localStorage.removeItem("token");
+					// api.dispatch(clearUserData())
 				}
 			} finally {
-				// release must be called once the mutex should be released again.
+				// Разблокировка мьютекса
 				release();
 			}
 		} else {
-			// wait until the mutex is available without locking it
+			// Ожидание, пока мьютекс станет доступным
 			await mutex.waitForUnlock();
+			// Повторение изначального запроса
 			result = await baseQuery(args, api, extraOptions);
 		}
 	}
@@ -69,16 +90,11 @@ const baseQueryWithReauth: BaseQueryFn<
 export const userApi = createApi({
 	reducerPath: "user/api",
 
-	// baseQuery: fetchBaseQuery({
-	// 	baseUrl: "http://localhost:5000/api/",
-	// 	headers: {
-	// 		Authorization: `Bearer ${localStorage.getItem("token")}`,
-	// 	},
-	// }),
-
-	baseQuery: baseQueryWithReauth,
+	baseQuery: baseQueryWithReauth, // Функция выполняется при каждом запросе
 
 	endpoints: (build) => ({
+
+		// Запрос регистрации
 		signup: build.mutation<IRespUser, registrationParams>({
 			query: (body: registrationParams) => ({
 				url: "registration",
@@ -86,11 +102,14 @@ export const userApi = createApi({
 				body,
 			}),
 			async onQueryStarted(body, { dispatch, queryFulfilled }) {
+				// Получение данных по окончанию запроса
 				const { data } = await queryFulfilled;
-				dispatch(setUser(data));
+				// Добавение всех данных в стейт
+				dispatch(setUserData(data));
 			},
 		}),
 
+		// Запрос авторизации
 		login: build.mutation<IRespUser, authorizationParams>({
 			query: (body: authorizationParams) => ({
 				url: "login",
@@ -98,34 +117,54 @@ export const userApi = createApi({
 				body,
 			}),
 			async onQueryStarted(body, { dispatch, queryFulfilled }) {
+				// Получение данных по окончанию запроса
 				const { data } = await queryFulfilled;
-				dispatch(setUser(data));
+				// Добавение всех данных в стейт
+				dispatch(setUserData(data));
 			},
 		}),
 
-		getUsers: build.mutation<any, string>({
-			query: (token) => ({
-				url: "users",
-				method: "get",
+		// Запрос входа
+		logout: build.mutation<void, void>({
+			query: () => ({
+				url: "logout",
+				method: "post",
 			}),
+			async onQueryStarted(params, { dispatch }) {
+				// Удаление всех данных о пользователе
+				dispatch(clearUserData());
+			},
 		}),
 
+		// Запрос на обновление токенов
 		refresh: build.mutation<IRespUser, void>({
 			query: () => ({
 				url: "refresh",
 				method: "get",
 			}),
 			async onQueryStarted(params, { dispatch, queryFulfilled }) {
+				// Получение данных по окончанию запроса
 				const { data } = await queryFulfilled;
-				dispatch(setUser(data));
+				// Добавение всех данных в стейт
+				dispatch(setUserData(data));
 			},
 		}),
+
+		// TESTS
+		getUsers: build.mutation<any, void>({
+			query: () => ({
+				url: "users",
+				method: "get",
+			}),
+		}),
+
 	}),
 });
 
 export const {
 	useLoginMutation,
 	useSignupMutation,
-	useGetUsersMutation,
+	useGetUsersMutation, // TESTS
 	useRefreshMutation,
+	useLogoutMutation,
 } = userApi;

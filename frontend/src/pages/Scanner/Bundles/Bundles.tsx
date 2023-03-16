@@ -3,6 +3,7 @@ import { useAppSelector } from "../../../hooks/useAppSelector";
 import styles from "./Bundles.module.scss";
 
 const Bundles = () => {
+	// Получение связок из стора
 	const { bundles } = useAppSelector((store) => store.bundles);
 
 	return (
@@ -27,17 +28,18 @@ const Bundles = () => {
 					<th>Платежка</th>
 					<th>Спред</th>
 				</tr>
+				{/* Перебор массива связок для создания строк с данными */}
 				{bundles?.map((item) => (
 					<tr className={styles.table__item}>
 						<td>{item.exchange_buy}</td>
 						<td>{item.asset_buy}</td>
-						<td>{Math.floor(item.price_buy * 100000) / 100000}</td>
+						<td>{Math.floor(item.price_buy * 100000) / 100000}</td> {/* Округление числа */}
 						<td>{item.payTypes_buy}</td>
 						<td>{item.exchange_sell}</td>
 						<td>{item.asset_sell}</td>
-						<td>{Math.floor(item.price_sell * 100000) / 100000}</td>
+						<td>{Math.floor(item.price_sell * 100000) / 100000}</td> {/* Округление числа */}
 						<td>{item.payTypes_sell}</td>
-						<td>{Math.floor(item.liquidity * 100) / 100} %</td>
+						<td>{Math.floor(item.liquidity * 100) / 100} %</td> {/* Округление числа */}
 					</tr>
 				))}
 			</table>

@@ -2,6 +2,7 @@ const connection = require("../data/config_db");
 const tokendb = connection("p2p"); // Использование фукнции для создания связи с базой данных
 
 const jwt = require("jsonwebtoken");
+const ApiError = require("../exceptions/api-error");
 
 class TokenService {
 	// Создание пары access и refresh токенов
@@ -39,7 +40,8 @@ class TokenService {
 	// Функция удаления refresh токена из базы данных
 	async removeToken(refreshToken) {
 		// Удаление записи с refresh токеном
-		const tokenData = await tokendb.query('DELETE FROM token WHERE refreshToken=?', refreshToken).catch(err => {throw err});
+		const tokenData = await tokendb.query('DELETE FROM token WHERE refreshToken=?', refreshToken)
+			.catch(err => {throw ApiError.BadRequest("Такого токена не существует в БД")});
 		return tokenData;
 	}
 
