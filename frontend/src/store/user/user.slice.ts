@@ -24,6 +24,8 @@ interface Authorization {
 interface IInitialState {
 	userData: User;
 	authorization: Authorization;
+	isAuth: boolean;
+	isLoading: boolean;
 }
 
 const initialState: IInitialState = {
@@ -42,6 +44,8 @@ const initialState: IInitialState = {
 		email: "",
 		password: "",
 	},
+	isAuth: false,
+	isLoading: true,
 };
 
 // Функция для преобразования дат из базы данных в нужный вид
@@ -61,7 +65,8 @@ const userSlice = createSlice({
 
 			// Добавление access токена в localStorage
 			localStorage.setItem("token", accessToken);
-
+			state.isAuth = true;
+			state.isLoading = false;
 			// Добавление данных в стейт
 			state.userData = {
 				...state.userData,
@@ -79,10 +84,20 @@ const userSlice = createSlice({
 		clearUserData: (state, action: PayloadAction<void>) => {
 			// Удаление access токена из localStorage
 			localStorage.removeItem("token");
+			state.isAuth = false;
+			state.isLoading = false;
 			// Очистка данных о пользователе
 			state.userData = {
 				...initialState.userData,
 			};
+		},
+
+		setIsLoading: (state, action: PayloadAction<boolean>) => {
+			state.isLoading = action.payload;
+		},
+
+		setIsAuth: (state, action: PayloadAction<boolean>) => {
+			state.isAuth = action.payload;
 		},
 
 		// Задание email-а из окна авторизации/регистрации

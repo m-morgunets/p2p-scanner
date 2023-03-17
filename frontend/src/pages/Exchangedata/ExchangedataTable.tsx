@@ -5,7 +5,6 @@ import styles from "./Exchangedata.module.scss";
 const ExchangedataTable = ({ typesQuery }: { typesQuery: String }) => {
 	// Получение данных биржи
 	const { isLoading, isError, data } = useGetExchangedataQuery(typesQuery);
-	console.log(data);
 	
 
 	// Функция делает первый символ строки заглавным

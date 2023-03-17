@@ -6,7 +6,7 @@ import HeaderLink from "./HeaderLink/HeaderLink";
 import avatarImg from "./../../assets/images/avatar.jpg";
 
 const Header = () => {
-	const { name } = useAppSelector((store) => store.user.userData);
+	const { name, access } = useAppSelector((store) => store.user.userData);
 	const { activeMode, modes } = useAppSelector((store) => store.settings);
 
 	return (
@@ -16,8 +16,13 @@ const Header = () => {
 			</div>
 
 			<div className={styles.header_box}>
-				<HeaderLink link={"/scanner"} title="<< открыть сканнер" />
-				<HeaderLink link={"/exchangedata"} title="биржевые данные" />
+				{/* Если у пользователя нет подписки, то не выводить две данные кнопки */}
+				{access ? (
+					<>
+						<HeaderLink link={"/scanner"} title="<< открыть сканнер" />
+						<HeaderLink link={"/exchangedata"} title="биржевые данные" />
+					</>
+				) : ""}
 				<HeaderLink link={"/community"} title="комьюнити" />
 				<HeaderLink link={"/support"} title="поддержка" />
 

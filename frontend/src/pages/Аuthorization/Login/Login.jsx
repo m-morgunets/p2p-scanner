@@ -19,17 +19,19 @@ const Login = (props) => {
 	const { email, password } = useAppSelector(
 		(store) => store.user.authorization
 	);
-	// Получение функций для сохранения данных формы в store 
-	const { setAuthEmail, setAuthPassword } = useActions();
+	// Получение функций для сохранения данных формы в store
+	const { setAuthEmail, setAuthPassword, setIsLoading } = useActions();
 
 	// Получение функции авторизации
 	const [login, { isError, isLoading }] = useLoginMutation();
-	
+
 	// Функция, используется при отправке формы
 	const submitForm = async (e) => {
 		e.preventDefault();
-		const data = await login({ email, password });
-	}
+		setIsLoading(true);
+		await login({ email, password });
+		setIsLoading(false);
+	};
 
 	return (
 		<section className={styles.section}>

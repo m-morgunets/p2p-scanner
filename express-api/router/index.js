@@ -22,10 +22,10 @@ router.get("/refresh", userController.refresh);
 router.get("/users", authMiddlewares, userController.getUsers);
 
 // Роутеры получения связок
-router.get("/standardbundles", exchangeController.getStandardBundles);
-router.get("/conversionbundles", exchangeController.getConversionBundles);
-router.get("/interexchangebundles", exchangeController.getInterexchangeBundles);
-router.get("/exchangedata/:dataType", exchangeController.getExchangeData);
+router.get("/standardbundles", authMiddlewares, exchangeController.getStandardBundles);
+router.get("/conversionbundles", authMiddlewares, exchangeController.getConversionBundles);
+router.get("/interexchangebundles", authMiddlewares, exchangeController.getInterexchangeBundles);
+router.get("/exchangedata/:dataType", authMiddlewares, exchangeController.getExchangeData);
 
 // Роутеры получения настроек для сортирвоки связок
 router.get("/settings", settingsControlller.getSettings);

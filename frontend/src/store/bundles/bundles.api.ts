@@ -16,6 +16,13 @@ export const bundlesApi = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl: "http://localhost:5000/api/",
 		method: "get",
+		credentials: "include", // Присоединение данных авторизации (refreshToken)
+		// prepareHeaders генерирует заголовки при каждом запросе
+		prepareHeaders: (headers, { getState }) => {
+			// Добавление заголовка с access токеном
+			headers.set("authorization", `Bearer ${localStorage.getItem("token")}`);
+			return headers;
+		},
 	}),
 	endpoints: (build) => ({
 		// Получение стандартных связок

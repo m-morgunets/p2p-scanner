@@ -65,13 +65,6 @@ const baseQueryWithReauth: BaseQueryFn<
 				} else {
 					// Выполняется запрос "logout" из объекта userApi
 					api.dispatch(userApi.endpoints.logout.initiate());
-
-					// await baseQuery({
-					// 	url: "logout",
-					// 	method: "post"
-					// }, api, extraOptions)
-					// localStorage.removeItem("token");
-					// api.dispatch(clearUserData())
 				}
 			} finally {
 				// Разблокировка мьютекса
@@ -93,7 +86,6 @@ export const userApi = createApi({
 	baseQuery: baseQueryWithReauth, // Функция выполняется при каждом запросе
 
 	endpoints: (build) => ({
-
 		// Запрос регистрации
 		signup: build.mutation<IRespUser, registrationParams>({
 			query: (body: registrationParams) => ({
@@ -157,7 +149,6 @@ export const userApi = createApi({
 				method: "get",
 			}),
 		}),
-
 	}),
 });
 

@@ -21,15 +21,17 @@ const Signup = (props) => {
 		(store) => store.user.authorization
 	);
 	// Получение функций для сохранения данных формы в store
-	const { setAuthName, setAuthEmail, setAuthPassword } = useActions();
+	const { setAuthName, setAuthEmail, setAuthPassword, setIsLoading } = useActions();
 
 	// Получение функции регистрации
 	const [signup, { isError, isLoading }] = useSignupMutation();
 
 	// Функция, используется при отправке формы
-	const submitForm = (e) => {
+	const submitForm = async (e) => {
 		e.preventDefault();
-		signup({ name, email, password });
+		setIsLoading(true);
+		await signup({ name, email, password });
+		setIsLoading(false);
 	};
 
 	return (

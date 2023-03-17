@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header";
 import { useActions } from "./hooks/useActions";
 import { useAppSelector } from "./hooks/useAppSelector";
@@ -11,42 +11,67 @@ import Support from "./pages/Support/Support";
 import Confirmation from "./pages/Аuthorization/Confirmation/Confirmation";
 import Login from "./pages/Аuthorization/Login/Login";
 import Signup from "./pages/Аuthorization/Signup/Signup";
-import {
-	useGetUsersMutation,
-	useRefreshMutation,
-} from "./store/user/user.api";
+import { useGetUsersMutation, useRefreshMutation } from "./store/user/user.api";
 
 function App() {
-
 	// TESTS
 	// const [getUsers] = useGetUsersMutation();
-	// const [refreshToken] = useRefreshMutation(); 
+	// const [refreshToken] = useRefreshMutation();
 	// useEffect(() => {
-		// const fatchData = async () => {
-		// 	await refreshToken();
-		// 	await getUsers();
-		// }
-		// fatchData()
+	// const fatchData = async () => {
+	// 	await refreshToken();
+	// 	await getUsers();
+	// }
+	// fatchData()
 	// }, []);
 
+	const { setIsLoading } = useActions();
+	const { isAuth, isLoading, userData } = useAppSelector((store) => store.user);
 
 	// Функция для создания новых токенов и поулчение актуальных данных
-	const [refreshToken] = useRefreshMutation(); 
+	const [refreshToken, { isLoading: isLoadingRefreshToken }] =
+		useRefreshMutation();
+		
+	const checkAuth = async () => {
+		setIsLoading(true);
+		await refreshToken();
+		setIsLoading(false);
+	};
 	useEffect(() => {
-		refreshToken();
+		checkAuth();
 	}, []);
 
 	return (
 		<>
 			<Header />
 			<Routes>
-				<Route path="/scanner" element={<Scanner />} />
-				<Route path="/community" element={<Community />} />
-				<Route path="/support" element={<Support />} />
-				<Route path="/profile" element={<Profile />} />
-				<Route path="/exchangedata" element={<Exchangedata />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/signup" element={<Signup />} />
+				{!isLoading && (
+					<Route
+						path="*"
+						element={<Navigate to={isAuth ? "/profile" : "/login"} />}
+					/>
+				)}
+
+				{isAuth && !isLoading && (
+					<>
+						<Route path="/profile" element={<Profile />} />
+						<Route path="/support" element={<Support />} />
+						<Route path="/community" element={<Community />} />
+						{userData.access && (
+							<>
+								<Route path="/scanner" element={<Scanner />} />
+								<Route path="/exchangedata" element={<Exchangedata />} />
+							</>
+						)}
+					</>
+				)}
+
+				{!isAuth && !isLoading && (
+					<>
+						<Route path="/login" element={<Login />} />
+						<Route path="/signup" element={<Signup />} />
+					</>
+				)}
 				{/* <Route path="/confirmation" element={<Confirmation/>} /> */}
 			</Routes>
 		</>
