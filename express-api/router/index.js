@@ -11,8 +11,9 @@ const settingsControlller = require("../controllers/settings-controlller");
 // Роутеры работы с пользователем
 router.post(
 	"/registration",
+	body("name").isLength({ min: 1, max: 30 }), // Проверка имени (от 1-го до 30-ти символов)
 	body("email").isEmail(), // Проверка email
-	body("password").isLength({ min: 3, max: 32 }), // Проверка пароля (от 3х до 32х символов)
+	body("password").isLength({ min: 3, max: 32 }), // Проверка пароля (от 3-х до 32-х символов)
 	userController.registration
 );
 router.post("/login", userController.login);

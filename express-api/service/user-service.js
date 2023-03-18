@@ -30,7 +30,7 @@ class UserService {
 		await userdb.query('INSERT INTO users(name, email, password, activationEmailLink) VALUES (?)', [[name, email, hashPassword, activationLink]]).catch(err => {throw err});
 
 		// // Функция отправки письма активации
-		await mailService.sendActivationEmail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
+		// await mailService.sendActivationEmail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
 		// Отправка запроса на получение данных пользователя по email
 		const [user] = await userdb.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
@@ -54,7 +54,7 @@ class UserService {
 		// Проверка если данные пользователя пустые, то выдаём ошибку,
 		// что записи о пользователе не существует
 		if (!user) {
-			throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} не найден`);
+			throw ApiError.BadRequest(`Пользователь с почтовым адресом "${email}" не найден`);
 		}
 
 		// Сравнение пароля из запроса и из базы данных

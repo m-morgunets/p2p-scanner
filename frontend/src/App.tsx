@@ -29,9 +29,8 @@ function App() {
 	const { isAuth, isLoading, userData } = useAppSelector((store) => store.user);
 
 	// Функция для создания новых токенов и поулчение актуальных данных
-	const [refreshToken, { isLoading: isLoadingRefreshToken }] =
-		useRefreshMutation();
-		
+	const [refreshToken] = useRefreshMutation();
+
 	const checkAuth = async () => {
 		setIsLoading(true);
 		await refreshToken();
@@ -43,7 +42,7 @@ function App() {
 
 	return (
 		<>
-			<Header />
+			{isAuth && <Header />}
 			<Routes>
 				{!isLoading && (
 					<Route
@@ -66,7 +65,7 @@ function App() {
 					</>
 				)}
 
-				{!isAuth && !isLoading && (
+				{!isAuth && (
 					<>
 						<Route path="/login" element={<Login />} />
 						<Route path="/signup" element={<Signup />} />

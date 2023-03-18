@@ -1,5 +1,6 @@
+import { UserErrors } from './../../types/errors';
 import { Mutex } from "async-mutex";
-import { clearUserData, setUserData } from "./user.slice";
+import { clearUserData, setErrorAuth, setUserData } from "./user.slice";
 import { IRespUser, IUser } from "./../../types/user";
 
 import {
@@ -21,6 +22,20 @@ interface registrationParams {
 interface authorizationParams {
 	email: string;
 	password: string;
+}
+
+export interface Empty {
+	error: Error;
+}
+
+export interface Error {
+	data:   Data;
+	status: number;
+}
+
+export interface Data {
+	message: string;
+	errors:  any[];
 }
 
 // Создаем новый мьютекс
@@ -108,6 +123,10 @@ export const userApi = createApi({
 				method: "post",
 				body,
 			}),
+			// transformErrorResponse: (response, meta, arg) => {
+			// 	const errorMessage = (response.data as UserErrors).message;
+				
+			// },
 			async onQueryStarted(body, { dispatch, queryFulfilled }) {
 				// Получение данных по окончанию запроса
 				const { data } = await queryFulfilled;

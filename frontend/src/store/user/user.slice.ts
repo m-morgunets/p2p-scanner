@@ -26,6 +26,7 @@ interface IInitialState {
 	authorization: Authorization;
 	isAuth: boolean;
 	isLoading: boolean;
+	errorAuth: string;
 }
 
 const initialState: IInitialState = {
@@ -46,6 +47,7 @@ const initialState: IInitialState = {
 	},
 	isAuth: false,
 	isLoading: true,
+	errorAuth: "",
 };
 
 // Функция для преобразования дат из базы данных в нужный вид
@@ -92,6 +94,10 @@ const userSlice = createSlice({
 			};
 		},
 
+		setErrorAuth: (state, action: PayloadAction<string>) => {
+			state.errorAuth = action.payload;
+		},
+
 		setIsLoading: (state, action: PayloadAction<boolean>) => {
 			state.isLoading = action.payload;
 		},
@@ -115,7 +121,8 @@ const userSlice = createSlice({
 	},
 });
 
-export const { setUserData, clearUserData } = userSlice.actions;
+export const { setUserData, clearUserData, setErrorAuth } =
+	userSlice.actions;
 export const userActions = userSlice.actions;
 
 export default userSlice.reducer;

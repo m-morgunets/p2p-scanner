@@ -8,6 +8,16 @@ class UserController {
 		try {
 			// Получение результатов валидации
 			const errors = validationResult(req);
+
+			if(errors.errors[0]?.param === "name") {
+				return next(ApiError.BadRequest('Введено некорректное имя. Введите имя от 1-го до 30-ти символов', errors.array()))
+			}
+			if(errors.errors[0]?.param === "email") {
+				return next(ApiError.BadRequest('Введена некорректная почта', errors.array()))
+			}
+			if(errors.errors[0]?.param === "password") {
+				return next(ApiError.BadRequest('Введён некорректный пароль. Введите пароль от 3-х до 32-х символов', errors.array()))
+			}
 			// Проверка не является ли массв ошибок пустым
 			if(!errors.isEmpty()) {
 				return next(ApiError.BadRequest('Ошибка при валидации', errors.array()))

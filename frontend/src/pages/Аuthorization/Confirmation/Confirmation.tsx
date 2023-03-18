@@ -4,7 +4,7 @@ import { useAppSelector } from "../../../hooks/useAppSelector";
 import stylesAuth from "./../Аuthorization.module.scss";
 import styles from "./Confirmation.module.scss";
 
-const Confirmation = (props) => {
+const Confirmation = () => {
 	// Добавление тегу body класса для дополнительной стилизации на конкретной странице
 	useEffect(() => {
 		document.body.classList.add("no-header");
@@ -24,7 +24,7 @@ const Confirmation = (props) => {
 			<div className={stylesAuth.wrapper}>
 				<div className={stylesAuth.box}>
 					<div
-						onClick={props.resetCode}
+						// onClick={props.resetCode}
 						className={`${stylesAuth.subtitle} ${styles.subtitle}`}
 					>
 						{"<-- Вход"}
@@ -32,7 +32,7 @@ const Confirmation = (props) => {
 					<div className={stylesAuth.title}>p2p_scanner</div>
 				</div>
 				<form
-					onSubmit={props.submitForm}
+					// onSubmit={props.submitForm}
 					className={`${stylesAuth.box} ${styles.сonfirmation}`}
 				>
 					<div className={styles.text}>
@@ -41,8 +41,8 @@ const Confirmation = (props) => {
 					</div>
 					<input
 						name="code"
-						onChange={props.onChangeInputCode}
-						value={props.code}
+						// onChange={props.onChangeInputCode}
+						// value={props.code}
 						placeholder="000000"
 						type="text"
 						className={stylesAuth.input}
@@ -63,7 +63,7 @@ const Confirmation = (props) => {
 					>
 						<button
 							type="submit"
-							disabled={props.wait}
+							// disabled={props.wait}
 							className={stylesAuth.btn__warp}
 						>
 							{"Проверить"}

@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import ErrorAuth from "../../../components/ErrorAuth/ErrorAuth";
 import { useActions } from "../../../hooks/useActions";
 import { useAppSelector } from "../../../hooks/useAppSelector";
 import { useSignupMutation } from "../../../store/user/user.api";
+import { UserErrors } from "../../../types/errors";
 import stylesAuth from "./../Аuthorization.module.scss";
 import styles from "./Signup.module.scss";
 
-const Signup = (props) => {
+const Signup = () => {
 	// Добавление тегу body класса для дополнительной стилизации на конкретной странице
 	useEffect(() => {
 		document.body.classList.add("no-header");
@@ -17,20 +19,32 @@ const Signup = (props) => {
 	});
 
 	// Получение данных из store
-	const { name, email, password } = useAppSelector(
-		(store) => store.user.authorization
-	);
+	const {
+		authorization: { name, email, password },
+		errorAuth,
+	} = useAppSelector((store) => store.user);
 	// Получение функций для сохранения данных формы в store
-	const { setAuthName, setAuthEmail, setAuthPassword, setIsLoading } = useActions();
+	const {
+		setAuthName,
+		setAuthEmail,
+		setAuthPassword,
+		setIsLoading,
+		setErrorAuth,
+	} = useActions();
 
 	// Получение функции регистрации
-	const [signup, { isError, isLoading }] = useSignupMutation();
+	const [signup] = useSignupMutation();
 
 	// Функция, используется при отправке формы
-	const submitForm = async (e) => {
+	const submitForm = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setIsLoading(true);
-		await signup({ name, email, password });
+		// Запрос на регистрациб с перехватом ошибок
+		await signup({ name, email, password })
+			.unwrap()
+			.catch((error: UserErrors) => {
+				setErrorAuth(error.data.message);
+			});
 		setIsLoading(false);
 	};
 
@@ -39,6 +53,8 @@ const Signup = (props) => {
 			<div className={stylesAuth.wrapper}>
 				<div className={`${stylesAuth.box} ${styles.box}`}>
 					<Link
+						// Очищение сообщений об ошибках при переходе между страницами
+						onClick={() => setErrorAuth("")}
 						to="/login"
 						className={`${stylesAuth.subtitle} ${styles.subtitle}`}
 					>
@@ -51,6 +67,7 @@ const Signup = (props) => {
 					onSubmit={(e) => submitForm(e)}
 					className={`${stylesAuth.box} ${styles.box}`}
 				>
+					{errorAuth && <ErrorAuth />}
 					<input
 						name="name"
 						onChange={(e) => setAuthName(e.target.value)}
