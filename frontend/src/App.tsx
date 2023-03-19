@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header";
+import NoActivatedEmail from "./components/NoActivatedEmail/NoActivatedEmail";
 import { useActions } from "./hooks/useActions";
 import { useAppSelector } from "./hooks/useAppSelector";
 import Community from "./pages/Community/Community";
@@ -26,7 +27,11 @@ function App() {
 	// }, []);
 
 	const { setIsLoading } = useActions();
-	const { isAuth, isLoading, userData } = useAppSelector((store) => store.user);
+	const {
+		isAuth,
+		isLoading,
+		userData: { isActivatedEmail, access },
+	} = useAppSelector((store) => store.user);
 
 	// Функция для создания новых токенов и поулчение актуальных данных
 	const [refreshToken] = useRefreshMutation();
@@ -42,8 +47,15 @@ function App() {
 
 	return (
 		<>
-			{isAuth && <Header />}
+			{isAuth && isActivatedEmail ? <Header /> : ""}
 			<Routes>
+				{isAuth && !isActivatedEmail && !isLoading && (
+					<>
+						<Route path="/no-activated-email" element={<NoActivatedEmail />} />
+						<Route path="*" element={<Navigate to={"no-activated-email"} />} />
+					</>
+				)}
+
 				{!isLoading && (
 					<Route
 						path="*"
@@ -51,12 +63,12 @@ function App() {
 					/>
 				)}
 
-				{isAuth && !isLoading && (
+				{isAuth && isActivatedEmail && !isLoading && (
 					<>
 						<Route path="/profile" element={<Profile />} />
 						<Route path="/support" element={<Support />} />
 						<Route path="/community" element={<Community />} />
-						{userData.access && (
+						{access && (
 							<>
 								<Route path="/scanner" element={<Scanner />} />
 								<Route path="/exchangedata" element={<Exchangedata />} />
@@ -64,6 +76,13 @@ function App() {
 						)}
 					</>
 				)}
+				{/* <Route path="/no-activated-email" element={<NoActivatedEmail />} /> */}
+				{/* {isAuth && !isActivatedEmail && !isLoading && (
+					<Route
+						path="*"
+						element={<Navigate to={"no-activated-email"} />}
+					/>
+				)} */}
 
 				{!isAuth && (
 					<>

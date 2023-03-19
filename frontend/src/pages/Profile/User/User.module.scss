@@ -2,6 +2,7 @@
   background-color: #0d0d0d;
   padding: 50px;
   position: fixed;
+  text-align: center;
 }
 .avatar {
   width: 200px;
@@ -16,17 +17,16 @@
   background-color: #343434;
 }
 .nickname {
-  text-align: center;
   font-size: 24px;
   font-weight: 600;
   padding: 30px 0 15px;
 }
 .date {
-  text-align: center;
   font-size: 16px;
   opacity: 0.5;
 }
 .box {
+  text-align: left;
   margin: 45px 0 50px;
   color: rgba(255, 255, 255, 0.5);
 }
@@ -50,15 +50,4 @@
   b{
     font-weight: 700;
   }
-}
-.button {
-  border: none;
-  cursor: pointer;
-  background-color: transparent;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #af4444;
-  font-size: 24px;
-  font-weight: 700;
 }

@@ -11,6 +11,7 @@ interface User {
 	name: string;
 	email: string;
 	access: boolean;
+	isActivatedEmail: boolean;
 }
 
 // Интерфейс данных использующихся при авторизации/регистрации
@@ -39,6 +40,7 @@ const initialState: IInitialState = {
 		name: "-",
 		email: "-",
 		access: false,
+		isActivatedEmail: false,
 	},
 	authorization: {
 		name: "",
@@ -80,6 +82,7 @@ const userSlice = createSlice({
 				name: user.name,
 				email: user.email,
 				access: user.access,
+				isActivatedEmail: user.isActivatedEmail,
 			};
 		},
 
@@ -121,8 +124,7 @@ const userSlice = createSlice({
 	},
 });
 
-export const { setUserData, clearUserData, setErrorAuth } =
-	userSlice.actions;
+export const { setUserData, clearUserData, setErrorAuth } = userSlice.actions;
 export const userActions = userSlice.actions;
 
 export default userSlice.reducer;

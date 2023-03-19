@@ -7,6 +7,7 @@ export interface IUser {
 	subscription: "standart" | "pro" | "business" | null;
 	lastPayDate: Date | null;
 	nextPayDate: Date | null;
+	isActivatedEmail: boolean;
 }
 
 

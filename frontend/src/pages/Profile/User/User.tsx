@@ -2,11 +2,9 @@ import { useAppSelector } from "../../../hooks/useAppSelector";
 import styles from "./User.module.scss";
 import avatarImg from "./../../../assets/images/avatar.jpg";
 import { useLogoutMutation } from "../../../store/user/user.api";
+import LogOutButton from "../../../components/LogOutButton/LogOutButton";
 
 const User = () => {
-	// Получение функции для выхода из аккаунта
-	const [logout] = useLogoutMutation();
-
 	// Получение данных из store
 	const { registrationDate, name, email, access, nextPayDate, subscription } =
 		useAppSelector((store) => store.user.userData);
@@ -36,9 +34,7 @@ const User = () => {
 				</div>
 			</div>
 			{/* Кнопка выхода из аккаунта */}
-			<button onClick={() => logout()} className={styles.button}>
-				выйти
-			</button>
+			<LogOutButton />
 		</section>
 	);
 };
