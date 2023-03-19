@@ -29,7 +29,7 @@ class UserService {
 		await mainDB.query('INSERT INTO users(name, email, password, activationEmailLink) VALUES (?)', [[name, email, hashPassword, activationLink]]).catch(err => {throw err});
 
 		// // Функция отправки письма активации
-		// await mailService.sendActivationEmail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
+		await mailService.sendActivationEmail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
 		// Отправка запроса на получение данных пользователя по email
 		const [user] = await mainDB.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
