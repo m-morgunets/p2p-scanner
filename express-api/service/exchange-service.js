@@ -1,4 +1,9 @@
-const connectDataBase = require("../data/config_db");
+const {	binancebundlesDB,
+	huobibundlesDB,
+	bizlatobundlesDB,
+	conversionbundlesDB,
+	interexchangeDB,
+	exchangedataDB,} = require("../database/connect-db");
 
 class ExchangeService {
 	// Функция создания текста запроса и задания параметров
@@ -62,17 +67,17 @@ class ExchangeService {
 		switch (exchanges) {
 			// Запрос а базе данных со связками Binance
 			case "binance":
-				const dataBinance = await connectDataBase('binancebundles').query(query, value).catch(err => {throw err});
+				const dataBinance = await binancebundlesDB.query(query, value).catch(err => {throw err});
         return dataBinance;
 
 			// Запрос а базе данных со связками Huobi
 			case "huobi":
-				const dataHuobi = await connectDataBase('huobibundles').query(query, value).catch(err => {throw err});
+				const dataHuobi = await huobibundlesDB.query(query, value).catch(err => {throw err});
         return dataHuobi;
 
 			// Запрос а базе данных со связками Bizlato
 			case "bizlato":
-				const dataBizlato = await connectDataBase('bizlatobundles').query(query, value).catch(err => {throw err});
+				const dataBizlato = await bizlatobundlesDB.query(query, value).catch(err => {throw err});
         return dataBizlato;
 
 			// Если ни одно из значений не совпало с параметром
@@ -85,7 +90,7 @@ class ExchangeService {
   async getConversionBundles(sum, exchanges, payTypes, assets) {
 		const { query, value } = ExchangeService.setRequestData(sum, exchanges, payTypes, assets);
     
-    const data = await connectDataBase('conversionbundles').query(query, value).catch(err => {throw err});
+    const data = await conversionbundlesDB.query(query, value).catch(err => {throw err});
     return data;
   }
 
@@ -93,13 +98,13 @@ class ExchangeService {
   async getInterexchangeBundles(sum, exchanges, payTypes, assets) {
 		const { query, value } = ExchangeService.setRequestData(sum, exchanges, payTypes, assets);
 
-    const data = await connectDataBase('interexchange').query(query, value).catch(err => {throw err});
+    const data = await interexchangeDB.query(query, value).catch(err => {throw err});
     return data;
   }
 
 	// Получение биржевых даннных
 	async getExchangeData(dataType) {
-		const data = await connectDataBase('exchangedata').query(`SELECT * FROM ${dataType}`).catch(err => {throw err});
+		const data = await exchangedataDB.query(`SELECT * FROM ${dataType}`).catch(err => {throw err});
 		return data;
 	}
 

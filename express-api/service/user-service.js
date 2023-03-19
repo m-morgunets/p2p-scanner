@@ -1,5 +1,4 @@
-const connection = require("../data/config_db");
-const userdb = connection("p2p"); // Использование фукнции для создания связи с базой данных
+const { mainDB } = require("../database/connect-db");
 
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
@@ -12,7 +11,7 @@ class UserService {
 	async registration(name, email, password) {
 
 		// Отправка запроса на получение данных пользователя по email
-		const [checkingUser] = await userdb.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
+		const [checkingUser] = await mainDB.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
 
 		// Проверка если данные пользователя не пустые, то выдаём ошибку,
 		// что пользователь уже существует в БД
@@ -27,13 +26,13 @@ class UserService {
 		// Создание ссылки для активации почты
 		const activationLink = uuid.v4();
 		// Создаём нового пользователя в БД
-		await userdb.query('INSERT INTO users(name, email, password, activationEmailLink) VALUES (?)', [[name, email, hashPassword, activationLink]]).catch(err => {throw err});
+		await mainDB.query('INSERT INTO users(name, email, password, activationEmailLink) VALUES (?)', [[name, email, hashPassword, activationLink]]).catch(err => {throw err});
 
 		// // Функция отправки письма активации
 		// await mailService.sendActivationEmail(email, `${process.env.API_URL}/api/activate/${activationLink}`);
 
 		// Отправка запроса на получение данных пользователя по email
-		const [user] = await userdb.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
+		const [user] = await mainDB.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
 
 		// Создание объекта с данными (отбрасываются данные которые не нужны на клиенте)
 		const userDto = new UserDto(user); // id, email, isActivated
@@ -49,7 +48,7 @@ class UserService {
 
 	async login(email, password) {
 		// Отправка запроса на получение данных пользователя по email
-		const [user] = await userdb.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
+		const [user] = await mainDB.query('SELECT * FROM users WHERE email=?', email).catch(err => {throw err});
 
 		// Проверка если данные пользователя пустые, то выдаём ошибку,
 		// что записи о пользователе не существует
@@ -86,7 +85,7 @@ class UserService {
 	// Функция проверки ссылки активации почты
 	async activate(activationLink) {
 		// Получение записи о пользователе по ссылке активации
-		const [user] = await userdb.query('SELECT * FROM users WHERE activationEmailLink=?', activationLink).catch(err => {throw err});
+		const [user] = await mainDB.query('SELECT * FROM users WHERE activationEmailLink=?', activationLink).catch(err => {throw err});
 
 		// Если пользователь не найден, то выводится ошибка что ссылка не корректная
 		if (!user) {
@@ -94,7 +93,7 @@ class UserService {
 		}
 
 		// Если пользователь найден, то меняется значение столбца об активации почты в значение true
-		await userdb.query('UPDATE users SET isActivatedEmail=true WHERE activationEmailLink=?', activationLink).catch(err => {throw err});
+		await mainDB.query('UPDATE users SET isActivatedEmail=true WHERE activationEmailLink=?', activationLink).catch(err => {throw err});
 	}
 
 	// Функция обновления токена
@@ -114,7 +113,7 @@ class UserService {
 		}
 
 		// Отправка запроса на получение данных пользователя по id
-		const [user] = await userdb.query('SELECT * FROM users WHERE id=?', userData.id).catch(err => {throw err});
+		const [user] = await mainDB.query('SELECT * FROM users WHERE id=?', userData.id).catch(err => {throw err});
 
 		// Создание объекта с данными (отбрасываются данные которые не нужны на клиенте)
 		const userDto = new UserDto(user); // id, email, isActivated
@@ -130,7 +129,7 @@ class UserService {
 
 	// Функция получение списка всех пользователей
 	async getAllUsers() {
-		const users = await userdb.query('SELECT * FROM users').catch(err => {throw err});
+		const users = await mainDB.query('SELECT * FROM users').catch(err => {throw err});
 		return users;
 	}
 }

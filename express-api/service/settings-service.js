@@ -1,9 +1,9 @@
-const connectDataBase = require("../data/config_db");
+const { mainDB } = require("../database/connect-db");
 
 class SettingsService{
   // Функция получения настроек
 	async getSettings() {
-    const data = await connectDataBase('p2p').query("SELECT exchange, assets, payTypes FROM settings_bundles").catch(err => {throw err});
+    const data = await mainDB.query("SELECT exchange, assets, payTypes FROM settings_bundles").catch(err => {throw err});
     return data;
 	}
 }

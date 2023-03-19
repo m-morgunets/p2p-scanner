@@ -9,22 +9,11 @@ import Exchangedata from "./pages/Exchangedata/Exchangedata";
 import Profile from "./pages/Profile/Profile";
 import Scanner from "./pages/Scanner/Scanner";
 import Support from "./pages/Support/Support";
-import Confirmation from "./pages/Аuthorization/Confirmation/Confirmation";
 import Login from "./pages/Аuthorization/Login/Login";
 import Signup from "./pages/Аuthorization/Signup/Signup";
-import { useGetUsersMutation, useRefreshMutation } from "./store/user/user.api";
+import { useRefreshMutation } from "./store/user/user.api";
 
 function App() {
-	// TESTS
-	// const [getUsers] = useGetUsersMutation();
-	// const [refreshToken] = useRefreshMutation();
-	// useEffect(() => {
-	// const fatchData = async () => {
-	// 	await refreshToken();
-	// 	await getUsers();
-	// }
-	// fatchData()
-	// }, []);
 
 	const { setIsLoading } = useActions();
 	const {
@@ -48,6 +37,7 @@ function App() {
 	return (
 		<>
 			{isAuth && isActivatedEmail ? <Header /> : ""}
+			
 			<Routes>
 				{isAuth && !isActivatedEmail && !isLoading && (
 					<>
@@ -76,13 +66,6 @@ function App() {
 						)}
 					</>
 				)}
-				{/* <Route path="/no-activated-email" element={<NoActivatedEmail />} /> */}
-				{/* {isAuth && !isActivatedEmail && !isLoading && (
-					<Route
-						path="*"
-						element={<Navigate to={"no-activated-email"} />}
-					/>
-				)} */}
 
 				{!isAuth && (
 					<>
@@ -90,7 +73,6 @@ function App() {
 						<Route path="/signup" element={<Signup />} />
 					</>
 				)}
-				{/* <Route path="/confirmation" element={<Confirmation/>} /> */}
 			</Routes>
 		</>
 	);

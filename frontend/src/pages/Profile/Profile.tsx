@@ -18,7 +18,7 @@ const Profile = () => {
 					<div className={styles.profile_info}>
 						<Subscription />
 						<Partner />
-						<Safety />
+						{/* <Safety /> */}
 					</div>
 				</div>
 				<div className={styles.profile_box}>

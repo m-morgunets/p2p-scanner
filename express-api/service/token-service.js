@@ -1,5 +1,4 @@
-const connection = require("../data/config_db");
-const tokendb = connection("p2p"); // Использование фукнции для создания связи с базой данных
+const { mainDB } = require("../database/connect-db");
 
 const jwt = require("jsonwebtoken");
 const ApiError = require("../exceptions/api-error");
@@ -25,22 +24,22 @@ class TokenService {
 	// Сохранение refresh токена в базе данных
 	async saveToken(userId, refreshToken) {
 		// Получение данных о токене по id пользователя
-		const [checkingToken] = await tokendb.query('SELECT * FROM token WHERE userId=?', userId).catch(err => {throw err});
+		const [checkingToken] = await mainDB.query('SELECT * FROM token WHERE userId=?', userId).catch(err => {throw err});
 
 		// Проверка если данные о токене не пустые, то обновляем refresh токен
 		if (checkingToken) {
-			await tokendb.query('UPDATE token SET refreshToken=? WHERE userId=?', [refreshToken, userId]).catch(err => {throw err});
+			await mainDB.query('UPDATE token SET refreshToken=? WHERE userId=?', [refreshToken, userId]).catch(err => {throw err});
 			return;
 		}
 
 		// Содание записи о новом пользователе и его refresh токен
-		await tokendb.query('INSERT INTO token(userId, refreshToken) VALUES (?)', [[userId, refreshToken]]).catch(err => {throw err});
+		await mainDB.query('INSERT INTO token(userId, refreshToken) VALUES (?)', [[userId, refreshToken]]).catch(err => {throw err});
 	}
 
 	// Функция удаления refresh токена из базы данных
 	async removeToken(refreshToken) {
 		// Удаление записи с refresh токеном
-		const tokenData = await tokendb.query('DELETE FROM token WHERE refreshToken=?', refreshToken)
+		const tokenData = await mainDB.query('DELETE FROM token WHERE refreshToken=?', refreshToken)
 			.catch(err => {throw ApiError.BadRequest("Такого токена не существует в БД")});
 		return tokenData;
 	}
@@ -70,7 +69,7 @@ class TokenService {
 	// Функция получение записи с токеном из БД
 	async findToken(refreshToken) {
 		// Получение записи по refreshToken-у
-		const [tokenData] = await tokendb.query('SELECT * FROM token WHERE refreshToken=?', refreshToken).catch(err => {throw err});
+		const [tokenData] = await mainDB.query('SELECT * FROM token WHERE refreshToken=?', refreshToken).catch(err => {throw err});
 		return tokenData;
 	}
 }

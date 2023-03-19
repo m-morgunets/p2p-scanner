@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const router = require("./router");
 const errorMiddlewares = require("./middlewares/error-middlewares");
-
+const connectDataBase = require("./database/config-db");
 
 const PORT = process.env.PORT || 5000;
 const app = express();
