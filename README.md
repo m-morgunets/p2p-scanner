@@ -31,3 +31,5 @@ TypeScript (v4.9.3) : типизация JS-кода;
 Redux Toolkit (v1.9.1) : стейт-менеджмент и запросы;
 Sass (v8.0.0) : написание CSS-стилей сайта;
 ```
+
+[t.me: @m_morgunets](https://t.me/m_morgunets)
