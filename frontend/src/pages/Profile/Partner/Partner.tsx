@@ -11,7 +11,7 @@ const Partner = () => {
 					твоя персональная ссылка-приглашение:
 				</div>
 				<div className={styles.box__input}>
-					<input value={"http://miha12x4.beget.tech/default"} type="text" />
+					<input value={"https://github.com/m-morgunets/affiliate-program"} type="text" />
 					<img src={copySvg} alt="" />
 				</div>
 
