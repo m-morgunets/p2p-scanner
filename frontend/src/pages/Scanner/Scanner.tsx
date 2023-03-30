@@ -70,20 +70,19 @@ const Scanner = () => {
 				break;
 
 			default:
+				console.error("Получение неверное значение активного режима работы сканера");
 				break;
 		}
-
-		console.log("Request for bundles");
 	};
 
 	// Вызов фукнции при изменении настроек
 	useEffect(() => {
 		getBundles();
-		// const handler = setInterval(() => {
-		// 	getBundles();
-		// }, 10000);
+		const handler = setInterval(() => {
+			getBundles();
+		}, 10000);
 
-		// return () => clearInterval(handler);
+		return () => clearInterval(handler);
 	}, [
 		activeMode,
 		activeSettingsInfo,
