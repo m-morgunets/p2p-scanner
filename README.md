@@ -41,7 +41,7 @@ Sass (v8.0.0) : написание CSS-стилей сайта;
 ```
 
 ## Как связаться со мной:
-[![](/screenshots/telegram.png)](https://t.me/m_morgunets) [![](/screenshots/hh.png)](https://yaroslavl.hh.ru/applicant/resumes/view?resume=e5c06f44ff0bd0a4010039ed1f7a68336e5a66)
+[![](/screenshots/telegram.png)](https://t.me/m_morgunets) [![](/screenshots/hh.png)](https://yaroslavl.hh.ru/resume/7033f0d3ff0bfca9fa0039ed1f35786c75714d)
 
 ## Скриншоты приложения
 
